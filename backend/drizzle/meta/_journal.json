@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1791611064478,
+      "tag": "0000_last_the_renegades",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791626558295,
+      "tag": "0001_silent_wendell_rand",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791627915254,
+      "tag": "0002_sad_lord_tyger",
+      "breakpoints": true
+    }
+  ]
+}
