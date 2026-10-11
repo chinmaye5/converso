@@ -1,35 +1,54 @@
 // src/controllers/chat.controller.ts
 import type { Request, Response } from "express";
 import { getAuth } from "@clerk/express";
-import { eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 
 import { db } from "../db";
-import { workspaces } from "../db/schema";
+import { workspaces, conversations, messages } from "../db/schema";
 import { runChat } from "../ai/chat.graph";
 
-/**
- * POST /api/workspaces/:workspaceId/chat
- * Body: { question: string }
- * Returns the generated answer and the source chunks used.
- */
 export async function chatWithBot(req: Request, res: Response) {
   try {
-    // 1. Authenticate via Clerk
+    // 1. Check the logged-in user.
     const { userId } = getAuth(req);
+
     if (!userId) {
       return res.status(401).json({ message: "Please log in first" });
     }
 
-    // 2. Workspace ID from URL
-    const { workspaceId } = req.params as { workspaceId: string };
+    // 2. Workspace ID from URL (may be string or array)
+    const workspaceIdParam = req.params.workspaceId;
+    const workspaceId = Array.isArray(workspaceIdParam)
+      ? workspaceIdParam[0]
+      : workspaceIdParam;
 
-    // 3. Extract the user question
-    const { question } = req.body as { question?: string };
-    if (!question || typeof question !== "string" || !question.trim()) {
-      return res.status(400).json({ message: "A question is required" });
+    // After this check, TypeScript knows workspaceId is a plain string.
+    if (!workspaceId) {
+      return res.status(400).json({ message: "Workspace ID is required" });
     }
 
-    // 4. Verify workspace ownership
+    const question = req.body.question;
+    const requestedConversationId = req.body.conversationId;
+
+    if (typeof question !== "string" || !question.trim()) {
+      return res.status(400).json({
+        message: "A question is required",
+      });
+    }
+
+    if (
+      requestedConversationId !== undefined &&
+      (typeof requestedConversationId !== "string" ||
+        !requestedConversationId.trim())
+    ) {
+      return res.status(400).json({
+        message: "Invalid conversationId",
+      });
+    }
+
+    const cleanQuestion = question.trim();
+
+    // 3. Verify that the user owns the workspace.
     const [workspace] = await db
       .select()
       .from(workspaces)
@@ -37,16 +56,100 @@ export async function chatWithBot(req: Request, res: Response) {
       .limit(1);
 
     if (!workspace || workspace.ownerId !== userId) {
-      return res.status(404).json({ message: "Workspace not found" });
+      return res.status(404).json({
+        message: "Workspace not found",
+      });
     }
 
-    // 5. Run the LangGraph workflow
-    const result = await runChat(question.trim(), workspaceId);
+    // 4. Load an existing conversation or create a new one.
+    let conversationId: string;
 
-    // 6. Respond with answer and sources
-    return res.json(result);
+    if (requestedConversationId) {
+      const [conversation] = await db
+        .select()
+        .from(conversations)
+        .where(
+          and(
+            eq(conversations.id, requestedConversationId),
+            eq(conversations.workspaceId, workspaceId),
+            eq(conversations.userId, userId),
+          ),
+        )
+        .limit(1);
+
+      if (!conversation) {
+        return res.status(404).json({
+          message: "Conversation not found",
+        });
+      }
+
+      conversationId = conversation.id;
+    } else {
+      const [conversation] = await db
+        .insert(conversations)
+        .values({
+          workspaceId,
+          userId,
+          title: cleanQuestion.slice(0, 200),
+        })
+        .returning({ id: conversations.id });
+
+      if (!conversation) {
+        return res.status(500).json({
+          message: "Could not create conversation",
+        });
+      }
+
+      conversationId = conversation.id;
+    }
+
+    // 5. Load the latest 10 previous messages.
+    const previousMessages = await db
+      .select({
+        role: messages.role,
+        content: messages.content,
+      })
+      .from(messages)
+      .where(eq(messages.conversationId, conversationId))
+      .orderBy(desc(messages.createdAt))
+      .limit(10);
+
+    // The database returns newest first; the model needs oldest first.
+    const history = previousMessages.reverse();
+
+    // 6. Generate the answer using LangGraph.
+    const result = await runChat(cleanQuestion, workspaceId, history);
+
+    // 7. Save the customer's question.
+    await db.insert(messages).values({
+      conversationId,
+      role: "user",
+      content: cleanQuestion,
+    });
+
+    // 8. Save the AI answer and its document sources.
+    await db.insert(messages).values({
+      conversationId,
+      role: "assistant",
+      content: result.answer,
+      sources: result.sources,
+    });
+
+    // 9. Update the conversation's last-updated time.
+    await db
+      .update(conversations)
+      .set({ updatedAt: new Date() })
+      .where(eq(conversations.id, conversationId));
+
+    return res.json({
+      conversationId,
+      answer: result.answer,
+      sources: result.sources,
+    });
   } catch (error) {
     console.error("Chat error:", error);
-    return res.status(500).json({ message: "Failed to generate a response" });
+    return res.status(500).json({
+      message: "Failed to generate a response",
+    });
   }
 }
