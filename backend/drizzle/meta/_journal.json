@@ -22,6 +22,27 @@
       "when": 1791627915254,
       "tag": "0002_sad_lord_tyger",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791698204164,
+      "tag": "0003_pale_baron_strucker",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1791699964779,
+      "tag": "0004_certain_proemial_gods",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1791700292030,
+      "tag": "0005_public_logan",
+      "breakpoints": true
     }
   ]
 }

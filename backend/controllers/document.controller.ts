@@ -1,14 +1,15 @@
-
 import type { Request, Response } from "express";
 import { and, eq } from "drizzle-orm";
 import { getAuth } from "@clerk/express";
 import multer from "multer";
 import { randomUUID } from "node:crypto";
 import path from "node:path";
+import { generateEmbeddings } from "../utils/embedding.utils";
 
 import { db } from "../db";
-import { workspaces, documents } from "../db/schema";
+import { workspaces, documents, documentChunks } from "../db/schema";
 import { supabase } from "../db/supabase";
+import { extractPdfText, splitIntoChunks } from "../utils/pdf.utils";
 
 export const uploadPdf = multer({
     storage: multer.memoryStorage(),
@@ -87,6 +88,7 @@ export async function uploadDocument(req: Request, res: Response) {
         }
 
         try {
+
             const [document] = await db
                 .insert(documents)
                 .values({
@@ -98,7 +100,69 @@ export async function uploadDocument(req: Request, res: Response) {
                 })
                 .returning();
 
-            return res.status(201).json({ document });
+            if (!document) {
+                throw new Error("Failed to create document record in database");
+            }
+
+            try {
+                // 1. Extract text from the uploaded PDF.
+                const extractedText = await extractPdfText(file.buffer);
+
+                // 2. Split the text into chunks.
+                const chunks = splitIntoChunks(extractedText);
+
+                if (chunks.length === 0) {
+                    throw new Error("No readable text found in this PDF");
+                }
+
+                // 3. Generate one embedding for each chunk.
+                const embeddings = await generateEmbeddings(
+                    chunks,
+                    "retrieval.passage",
+                );
+
+                // 4. Save text and its matching embedding together in PostgreSQL.
+                await db.insert(documentChunks).values(
+                    chunks.map((content, chunkIndex) => ({
+                        documentId: document.id,
+                        content,
+                        chunkIndex,
+                        embedding: embeddings[chunkIndex],
+                    })),
+                );
+
+                // 5. Mark the document as processed.
+                const [processedDocument] = await db
+                    .update(documents)
+                    .set({
+                        status: "processed",
+                        updatedAt: new Date(),
+                    })
+                    .where(eq(documents.id, document.id))
+                    .returning();
+
+                return res.status(201).json({
+                    document: processedDocument,
+                    chunksCreated: chunks.length,
+                });
+            } catch (processingError) {
+                console.error("PDF processing failed:", processingError);
+
+                const [failedDocument] = await db
+                    .update(documents)
+                    .set({
+                        status: "failed",
+                        updatedAt: new Date(),
+                    })
+                    .where(eq(documents.id, document.id))
+                    .returning();
+
+                return res.status(201).json({
+                    document: failedDocument,
+                    warning: "PDF uploaded, but text processing failed.",
+                });
+            }
+
         } catch (dbError) {
             // Avoid leaving an orphaned file if the database insert fails.
             await supabase.storage

@@ -6,6 +6,7 @@ import {
   boolean,
   text,
   integer,
+  vector,
 } from "drizzle-orm/pg-core";
 
 export const workspaces = pgTable("workspaces", {
@@ -62,6 +63,7 @@ export const chatbots = pgTable("chatbots", {
 });
 
 
+
 export const documents = pgTable("documents", {
   id: uuid("id").defaultRandom().primaryKey(),
 
@@ -80,11 +82,33 @@ export const documents = pgTable("documents", {
     .notNull()
     .default("pending"),
 
+  embedding: vector("embedding", { dimensions: 1024 }),
+
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
 
   updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+
+
+export const documentChunks = pgTable("document_chunks", {
+  id: uuid("id").defaultRandom().primaryKey(),
+
+  documentId: uuid("document_id")
+    .notNull()
+    .references(() => documents.id, { onDelete: "cascade" }),
+
+  content: text("content").notNull(),
+
+  chunkIndex: integer("chunk_index").notNull(),
+
+  embedding: vector("embedding", { dimensions: 1024 }),
+
+  createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
 });

@@ -8,6 +8,7 @@ import profileRouter from "./routes/profile.route";
 import workspaceRouter from "./routes/workspace.route";
 import chatbotRoutes from "./routes/chatbot.routes";
 import documentRoutes from "./routes/document.route";
+import searchRouter from "./routes/search.route"
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use("/api/workspaces", workspaceRouter);
 app.use("/api/workspaces/:workspaceId/chatbot", chatbotRoutes);
 app.use("/api/workspaces/:workspaceId/documents", documentRoutes);
 
+app.use("/api/workspaces/:workspaceId/search", searchRouter);
 app.listen(5000, () => {
     console.log("Backend running on http://localhost:5000");
 });

@@ -24,6 +24,7 @@
     "drizzle-orm": "^0.45.4",
     "express": "^5.2.1",
     "multer": "^2.4.0",
+    "pdf-parse": "^2.4.5",
     "postgres": "^3.4.9"
   }
 }

@@ -20,8 +20,7 @@ export async function createWorkspace(req: Request, res: Response) {
   const userId = getUserId(req, res);
   if (!userId) return;
 
-  const name =
-    typeof req.body?.name === "string" ? req.body.name.trim() : "";
+  const name = typeof req.body?.name === "string" ? req.body.name.trim() : "";
 
   if (!name || name.length > 100) {
     return res.status(400).json({
@@ -65,13 +64,18 @@ export async function getWorkspace(req: Request, res: Response) {
   const userId = getUserId(req, res);
   if (!userId) return;
 
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  if (!id || typeof id !== "string") {
+    return res.status(400).json({ error: "Invalid workspace ID" });
+  }
+
   try {
     const [workspace] = await db
       .select()
       .from(workspaces)
       .where(
         and(
-          eq(workspaces.id, req.params.id),
+          eq(workspaces.id, id),
           eq(workspaces.ownerId, userId),
         ),
       )
@@ -93,8 +97,12 @@ export async function updateWorkspace(req: Request, res: Response) {
   const userId = getUserId(req, res);
   if (!userId) return;
 
-  const name =
-    typeof req.body?.name === "string" ? req.body.name.trim() : "";
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  if (!id || typeof id !== "string") {
+    return res.status(400).json({ error: "Invalid workspace ID" });
+  }
+
+  const name = typeof req.body?.name === "string" ? req.body.name.trim() : "";
 
   if (!name || name.length > 100) {
     return res.status(400).json({
@@ -108,7 +116,7 @@ export async function updateWorkspace(req: Request, res: Response) {
       .set({ name, updatedAt: new Date() })
       .where(
         and(
-          eq(workspaces.id, req.params.id),
+          eq(workspaces.id, id),
           eq(workspaces.ownerId, userId),
         ),
       )
@@ -130,12 +138,18 @@ export async function deleteWorkspace(req: Request, res: Response) {
   const userId = getUserId(req, res);
   if (!userId) return;
 
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+
+  if (!id || typeof id !== "string") {
+    return res.status(400).json({ error: "Invalid workspace ID" });
+  }
+
   try {
     const [workspace] = await db
       .delete(workspaces)
       .where(
         and(
-          eq(workspaces.id, req.params.id),
+          eq(workspaces.id, id),
           eq(workspaces.ownerId, userId),
         ),
       )
