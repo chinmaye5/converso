@@ -1,4 +1,6 @@
 import {
+  pgEnum,
+  jsonb,
   pgTable,
   uuid,
   varchar,
@@ -109,6 +111,59 @@ export const documentChunks = pgTable("document_chunks", {
   embedding: vector("embedding", { dimensions: 1024 }),
 
   createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+
+
+export const messageRoleEnum = pgEnum("message_role", [
+  "user",
+  "assistant",
+]);
+
+export const conversations = pgTable("conversations", {
+  id: uuid("id").defaultRandom().primaryKey(),
+
+  workspaceId: uuid("workspace_id")
+    .notNull()
+    .references(() => workspaces.id, { onDelete: "cascade" }),
+
+  // The Clerk ID of the user who owns this conversation.
+  userId: varchar("user_id", { length: 255 }).notNull(),
+
+  title: varchar("title", { length: 200 }).notNull(),
+
+  createdAt: timestamp("created_at")
+    .defaultNow()
+    .notNull(),
+
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .notNull(),
+});
+
+export const messages = pgTable("messages", {
+  id: uuid("id").defaultRandom().primaryKey(),
+
+  conversationId: uuid("conversation_id")
+    .notNull()
+    .references(() => conversations.id, { onDelete: "cascade" }),
+
+  role: messageRoleEnum("role").notNull(),
+
+  content: text("content").notNull(),
+
+  // Save sources returned with an AI answer.
+  sources: jsonb("sources").$type<
+    {
+      filename: string;
+      content: string;
+      similarity: number;
+    }[]
+  >(),
+
+  createdAt: timestamp("created_at")
     .defaultNow()
     .notNull(),
 });

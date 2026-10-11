@@ -43,6 +43,13 @@
       "when": 1791700292030,
       "tag": "0005_public_logan",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791719108650,
+      "tag": "0006_famous_molecule_man",
+      "breakpoints": true
     }
   ]
 }
