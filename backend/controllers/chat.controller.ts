@@ -4,8 +4,14 @@ import { getAuth } from "@clerk/express";
 import { and, desc, eq } from "drizzle-orm";
 
 import { db } from "../db";
-import { workspaces, conversations, messages } from "../db/schema";
+import {
+  workspaces,
+  conversations,
+  messages,
+  supportTickets,
+} from "../db/schema";
 import { runChat } from "../ai/chat.graph";
+import { customerRequestsHuman } from "../ai/handoff.utils";
 
 export async function chatWithBot(req: Request, res: Response) {
   try {
@@ -101,6 +107,66 @@ export async function chatWithBot(req: Request, res: Response) {
       }
 
       conversationId = conversation.id;
+    }
+
+    // Check if the customer is requesting human support.
+    if (customerRequestsHuman(cleanQuestion)) {
+      // Reuse the existing conversation, or create one if necessary.
+      let handoffConversationId = conversationId;
+
+      if (!handoffConversationId) {
+        const [newConversation] = await db
+          .insert(conversations)
+          .values({
+            workspaceId,
+            userId,
+            title: cleanQuestion.slice(0, 200),
+          })
+          .returning({ id: conversations.id });
+
+        if (!newConversation) {
+          return res.status(500).json({
+            message: "Could not create conversation",
+          });
+        }
+
+        handoffConversationId = newConversation.id;
+      }
+
+      // Save the customer's request.
+      await db.insert(messages).values({
+        conversationId: handoffConversationId,
+        role: "user",
+        content: cleanQuestion,
+      });
+
+      // Create the human-support ticket.
+      const [ticket] = await db
+        .insert(supportTickets)
+        .values({
+          workspaceId,
+          conversationId: handoffConversationId,
+          createdBy: userId,
+          subject: "Customer requested human support",
+          description: cleanQuestion,
+        })
+        .returning();
+
+      if (!ticket) {
+        return res.status(500).json({
+          message: "Could not create support ticket",
+        });
+      }
+
+      return res.json({
+        conversationId: handoffConversationId,
+        handoff: true,
+        message: "I've created a support ticket for human assistance.",
+        ticket: {
+          id: ticket.id,
+          status: ticket.status,
+        },
+      });
     }
 
     // 5. Load the latest 10 previous messages.

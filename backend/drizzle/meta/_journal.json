@@ -50,6 +50,13 @@
       "when": 1791719108650,
       "tag": "0006_famous_molecule_man",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1791783714438,
+      "tag": "0007_bizarre_sunspot",
+      "breakpoints": true
     }
   ]
 }

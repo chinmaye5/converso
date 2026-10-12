@@ -167,3 +167,35 @@ export const messages = pgTable("messages", {
     .defaultNow()
     .notNull(),
 });
+
+
+
+export const ticketStatusEnum = pgEnum("ticket_status", [
+  "open",
+  "in_progress",
+  "resolved",
+]);
+
+export const supportTickets = pgTable("support_tickets", {
+  id: uuid("id").defaultRandom().primaryKey(),
+
+  workspaceId: uuid("workspace_id")
+    .notNull()
+    .references(() => workspaces.id, { onDelete: "cascade" }),
+
+  conversationId: uuid("conversation_id")
+    .references(() => conversations.id, { onDelete: "set null" }),
+
+  // Clerk ID of the authenticated person who created the ticket.
+  createdBy: varchar("created_by", { length: 255 }).notNull(),
+
+  subject: varchar("subject", { length: 200 }).notNull(),
+
+  description: text("description").notNull(),
+
+  status: ticketStatusEnum("status").default("open").notNull(),
+
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
