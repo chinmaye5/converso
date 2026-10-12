@@ -11,6 +11,7 @@ import documentRoutes from "./routes/document.route";
 import searchRouter from "./routes/search.route"
 import chatRoutes from "./routes/chat.route"
 import ticketRoutes from "./routes/ticket.route";
+import publicChatRoutes from "./routes/public-chat.route";
 
 
 const app = express();
@@ -36,6 +37,7 @@ app.use("/api/workspaces/:workspaceId/documents", documentRoutes);
 app.use("/api/workspaces/:workspaceId/chat", chatRoutes);
 app.use("/api/workspaces/:workspaceId/search", searchRouter);
 app.use("/api/workspaces/:workspaceId/tickets", ticketRoutes);
+app.use("/api/public/chatbots", publicChatRoutes);
 
 app.listen(5000, () => {
     console.log("Backend running on http://localhost:5000");

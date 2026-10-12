@@ -57,6 +57,13 @@
       "when": 1791783714438,
       "tag": "0007_bizarre_sunspot",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1791786744054,
+      "tag": "0008_natural_nehzno",
+      "breakpoints": true
     }
   ]
 }

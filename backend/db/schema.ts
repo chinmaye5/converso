@@ -195,7 +195,14 @@ export const supportTickets = pgTable("support_tickets", {
 
   status: ticketStatusEnum("status").default("open").notNull(),
 
+  customerName: varchar("customer_name", { length: 100 }),
+
+  customerEmail: varchar("customer_email", { length: 255 }),
+
+  customerPhone: varchar("customer_phone", { length: 50 }),
+
   createdAt: timestamp("created_at").defaultNow().notNull(),
 
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+
