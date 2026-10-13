@@ -7,18 +7,13 @@ import { useUser } from "@clerk/nextjs";
 import {
   Bot,
   FileText,
-  Zap,
   LifeBuoy,
   ArrowRight,
   CheckCircle,
-  MessageSquare,
   Shield,
   BarChart3,
-  ChevronRight,
   Sparkles,
   Globe,
-  Clock,
-  Users,
   Menu,
   X,
   Sun,
@@ -26,8 +21,7 @@ import {
 } from "lucide-react";
 
 import Grainient from "../Grainient";
-
-const HERO_COLORS = ["#0A0A0A", "#1a0306", "#5c0710", "#E30613"];
+const HERO_COLORS = ["#0A0A0A", "#050f26", "#0a2f80", "#2563eb", "#7aa7ff"];
 
 const FEATURES = [
   {
@@ -167,12 +161,6 @@ export function LandingPage() {
                 </Link>
               </>
             )}
-            <Link
-              href="/signup"
-              className="px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.06em] bg-[#E30613] hover:bg-[#C50510] text-white rounded-[1px] transition-colors"
-            >
-              Get Started
-            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -210,15 +198,20 @@ export function LandingPage() {
 
       {/* ── Hero ── */}
       <section className="relative pt-32 pb-24 px-6 overflow-hidden">
-        {/* Grid background */}
-        <div
-          className="absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage:
-              "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-          }}
-        />
+        {/* Grainient background */}
+        <div className="absolute inset-0 bg-[#0A0A0A] pointer-events-none" aria-hidden="true">
+          <Grainient
+            colors={HERO_COLORS}
+            angle={55}
+            flow={1.1}        // 0.4 calm, 1.5 marbled
+            softness={1}      // 0 gives crisp poster-style edges
+            silk={0.5}        // more glossy folds
+            grainAmount={0.1}
+            dpr={1.5}
+          />
+          {/* Fade the bottom into the page background */}
+          <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-b from-transparent to-[#0A0A0A]" />
+        </div>
 
         <div className="relative max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 border border-white/10 rounded-[1px] text-[11px] font-mono text-white/50 mb-8">
@@ -228,10 +221,10 @@ export function LandingPage() {
 
           <h1 className="text-5xl md:text-7xl font-bold leading-[1.05] tracking-tight mb-6">
             AI customer support.{" "}
-            <span className="text-[#E30613]">Zero wait.</span>
+            <span className="text-white">Zero wait.</span>
           </h1>
 
-          <p className="text-lg text-white/50 max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-lg text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed">
             Converso deploys an AI assistant trained on your business knowledge — resolving
             80%+ of support queries instantly, and escalating the rest to your human team
             with full context.

@@ -305,14 +305,13 @@ export function DashboardOverview() {
                 {item.done ? (
                   <CheckCircle2 className="w-4 h-4 text-[#16A34A] shrink-0 mt-0.5" />
                 ) : (
-                  <Circle className="w-4 h-4 text-[var(--fg-faint)] shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-4 h-4 text-[#16A34A] shrink-0 mt-0.5" />
                 )}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
                     <p
-                      className={`text-xs font-medium ${
-                        item.done ? "text-[var(--fg)]" : "text-[var(--fg)]"
-                      }`}
+                      className={`text-xs font-medium ${item.done ? "text-[var(--fg)]" : "text-[var(--fg)]"
+                        }`}
                     >
                       {item.title}
                     </p>

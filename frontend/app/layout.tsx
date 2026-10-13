@@ -1,12 +1,15 @@
 import { ClerkProvider } from "@clerk/nextjs";
-import { Inter, JetBrains_Mono, Geist } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { ThemeProvider } from "../lib/theme-context";
 import "./globals.css";
-import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -23,7 +26,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <ClerkProvider>
-      <html lang="en" className={cn(jetbrainsMono.variable, "font-sans", geist.variable)}>
+      <html
+        lang="en"
+        data-theme="dark"
+        suppressHydrationWarning
+        className={`${inter.variable} ${jetbrainsMono.variable}`}
+      >
         <body className="min-h-screen antialiased">
           <ThemeProvider>{children}</ThemeProvider>
         </body>
@@ -31,4 +39,3 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     </ClerkProvider>
   );
 }
-
