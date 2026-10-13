@@ -414,7 +414,6 @@ function ChatClient() {
         addMessage({
           role: "assistant",
           content: data.answer,
-          sources: data.sources,
         });
       }
     } catch {
@@ -485,8 +484,8 @@ function ChatClient() {
             <span
               aria-hidden
               className={`block h-2 w-2 ${meta.isActive
-                  ? "bg-[color:var(--accent)]"
-                  : "border border-neutral-500"
+                ? "bg-[color:var(--accent)]"
+                : "border border-neutral-500"
                 }`}
             />
             {meta.isActive ? "Online" : "Offline"}

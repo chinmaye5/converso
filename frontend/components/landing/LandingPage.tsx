@@ -104,11 +104,10 @@ export function LandingPage() {
     <div className="min-h-screen bg-[#0A0A0A] text-white font-sans">
       {/* ── Navbar ── */}
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
-          scrolled
-            ? "bg-[#0A0A0A]/95 backdrop-blur-sm border-b border-white/10"
-            : "bg-transparent"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${scrolled
+          ? "bg-[#0A0A0A]/95 backdrop-blur-sm border-b border-white/10"
+          : "bg-transparent"
+          }`}
       >
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           {/* Logo */}
@@ -146,7 +145,6 @@ export function LandingPage() {
                 href="/dashboard"
                 className="px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.06em] bg-[#E30613] hover:bg-[#C50510] text-white rounded-[1px] transition-colors inline-flex items-center gap-1.5"
               >
-                <LayoutDashboard className="w-3.5 h-3.5" />
                 Go to Dashboard
               </Link>
             ) : (
@@ -277,11 +275,10 @@ export function LandingPage() {
                 {["Overview", "Chatbot", "Knowledge", "Tickets", "Playground"].map((item, i) => (
                   <div
                     key={item}
-                    className={`flex items-center gap-2 px-2.5 py-1.5 rounded-[1px] text-[10px] ${
-                      i === 0
-                        ? "bg-white/5 text-white font-medium"
-                        : "text-white/30"
-                    }`}
+                    className={`flex items-center gap-2 px-2.5 py-1.5 rounded-[1px] text-[10px] ${i === 0
+                      ? "bg-white/5 text-white font-medium"
+                      : "text-white/30"
+                      }`}
                   >
                     <span className="w-1 h-1 rounded-full bg-current shrink-0" />
                     {item}
