@@ -42,6 +42,8 @@ app.use("/api/workspaces/:workspaceId/search", searchRouter);
 app.use("/api/workspaces/:workspaceId/tickets", ticketRoutes);
 app.use("/api/public/chatbots", publicChatRoutes);
 
-app.listen(5000, () => {
-    console.log("Backend running on http://localhost:5000");
+const PORT = Number(process.env.PORT) || 5000;
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
