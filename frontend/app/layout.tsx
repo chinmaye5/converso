@@ -1,6 +1,25 @@
 import { ClerkProvider } from "@clerk/nextjs";
+import { Inter, JetBrains_Mono } from "next/font/google";
+import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  title: "Converso — AI Customer Support",
+  description: "Configure AI chatbots, upload knowledge documents, and manage customer support requests.",
+};
 
 export default function RootLayout({
   children,
@@ -9,8 +28,10 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body>{children}</body>
+      <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
+        <body className="min-h-screen bg-[#FAFAFA] text-[#0A0A0A] font-sans antialiased">
+          {children}
+        </body>
       </html>
     </ClerkProvider>
   );

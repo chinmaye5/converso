@@ -16,7 +16,38 @@ function getParam(value: string | string[] | undefined): string | undefined {
   return Array.isArray(value) ? value[0] : value;
 }
 
+export async function publicChatbotInfo(req: Request, res: Response) {
+  const chatbotId = getParam(req.params.chatbotId);
+
+  if (!chatbotId) {
+    return res.status(400).json({ message: "Chatbot ID is required" });
+  }
+
+  try {
+    const [chatbot] = await db
+      .select({
+        id: chatbots.id,
+        name: chatbots.name,
+        primaryColor: chatbots.primaryColor,
+        isActive: chatbots.isActive,
+      })
+      .from(chatbots)
+      .where(eq(chatbots.id, chatbotId))
+      .limit(1);
+
+    if (!chatbot) {
+      return res.status(404).json({ message: "Chatbot not found" });
+    }
+
+    return res.json({ chatbot });
+  } catch (error) {
+    console.error("publicChatbotInfo error:", error);
+    return res.status(500).json({ message: "Could not load chatbot info" });
+  }
+}
+
 export async function publicChat(req: Request, res: Response) {
+
   try {
     // 1. Validate the public chatbot ID from URL param.
     const chatbotId = getParam(req.params.chatbotId);
