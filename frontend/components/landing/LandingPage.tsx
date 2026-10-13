@@ -25,6 +25,10 @@ import {
   Moon,
 } from "lucide-react";
 
+import Grainient from "../Grainient";
+
+const HERO_COLORS = ["#0A0A0A", "#1a0306", "#5c0710", "#E30613"];
+
 const FEATURES = [
   {
     icon: Bot,
@@ -215,8 +219,6 @@ export function LandingPage() {
             backgroundSize: "60px 60px",
           }}
         />
-        {/* Red glow */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[#E30613]/10 rounded-full blur-[120px] pointer-events-none" />
 
         <div className="relative max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 border border-white/10 rounded-[1px] text-[11px] font-mono text-white/50 mb-8">
