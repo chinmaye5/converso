@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useAuth, useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
@@ -108,3 +108,4 @@ export default function ProfilePage() {
     </AppShell>
   );
 }
+

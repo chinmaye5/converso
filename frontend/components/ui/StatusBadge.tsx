@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 
 type BadgeVariant =
   | "open"
@@ -58,13 +58,13 @@ export function StatusBadge({ status, label }: StatusBadgeProps) {
     },
     inactive: {
       border: "border-[#737373]/40",
-      text: "text-[#737373]",
+      text: "text-[var(--fg-muted)]",
       bg: "bg-[#737373]/5",
     },
     neutral: {
-      border: "border-[#E5E5E5]",
-      text: "text-[#737373]",
-      bg: "bg-white",
+      border: "border-[var(--border)]",
+      text: "text-[var(--fg-muted)]",
+      bg: "bg-[var(--surface)]",
     },
   };
 
@@ -78,3 +78,6 @@ export function StatusBadge({ status, label }: StatusBadgeProps) {
     </span>
   );
 }
+
+
+

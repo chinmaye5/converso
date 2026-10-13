@@ -1,17 +1,17 @@
-import React from "react";
+﻿import React from "react";
 
 export function SkeletonBlock({
   className = "",
 }: {
   className?: string;
 }) {
-  return <div className={`bg-[#F0F0F0] rounded-[1px] ${className}`} />;
+  return <div className={`bg-[var(--surface-alt)] animate-pulse rounded-[1px] ${className}`} />;
 }
 
 export function TableSkeleton({ rows = 4 }: { rows?: number }) {
   return (
-    <div className="border border-[#E5E5E5] bg-white divide-y divide-[#E5E5E5]">
-      <div className="p-4 bg-[#FAFAFA] flex gap-4">
+    <div className="border border-[var(--border)] bg-[var(--surface)] divide-y divide-[var(--border)]">
+      <div className="p-4 bg-[var(--bg-subtle)] flex gap-4">
         <SkeletonBlock className="h-4 w-1/4" />
         <SkeletonBlock className="h-4 w-1/3" />
         <SkeletonBlock className="h-4 w-1/4" />
@@ -29,11 +29,11 @@ export function TableSkeleton({ rows = 4 }: { rows?: number }) {
 
 export function StatSkeleton() {
   return (
-    <div className="border border-[#E5E5E5] bg-white grid grid-cols-1 md:grid-cols-4 mb-8">
+    <div className="border border-[var(--border)] bg-[var(--surface)] grid grid-cols-1 md:grid-cols-4 mb-8">
       {Array.from({ length: 4 }).map((_, i) => (
         <div
           key={i}
-          className={`p-5 ${i !== 3 ? "md:border-r border-[#E5E5E5]" : ""}`}
+          className={`p-5 ${i !== 3 ? "md:border-r border-[var(--border)]" : ""}`}
         >
           <SkeletonBlock className="h-3 w-20 mb-3" />
           <SkeletonBlock className="h-8 w-16 mb-2" />
@@ -47,7 +47,7 @@ export function StatSkeleton() {
 export function PageLoadingSkeleton() {
   return (
     <div className="space-y-6">
-      <div className="border-b border-[#E5E5E5] pb-6">
+      <div className="border-b border-[var(--border)] pb-6">
         <SkeletonBlock className="h-3 w-24 mb-2" />
         <SkeletonBlock className="h-7 w-48 mb-2" />
         <SkeletonBlock className="h-4 w-96" />
@@ -57,3 +57,4 @@ export function PageLoadingSkeleton() {
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useAuth } from "@clerk/nextjs";
@@ -238,7 +238,7 @@ export function ConversationsHistoryView() {
           <button
             type="button"
             onClick={createNewSession}
-            className="px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.05em] bg-[#0A0A0A] hover:bg-[#262626] text-white transition-colors rounded-[1px] inline-flex items-center gap-1.5"
+            className="px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.05em] btn-primary transition-colors rounded-[1px] inline-flex items-center gap-1.5"
           >
             <MessageSquare className="w-3.5 h-3.5" />
             New Session
@@ -249,24 +249,24 @@ export function ConversationsHistoryView() {
       <StatRow stats={statItems} />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* ── Session list ── */}
+        {/* â”€â”€ Session list â”€â”€ */}
         <div className={`${activeSession ? "lg:col-span-4" : "lg:col-span-4"} space-y-1`}>
           <div className="flex items-center justify-between mb-3">
-            <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#737373]">
+            <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--fg-muted)]">
               Sessions ({sessions.length})
             </p>
           </div>
 
           {sessions.length === 0 ? (
-            <div className="border border-dashed border-[#E5E5E5] bg-white p-6 text-left">
-              <Sparkles className="w-4 h-4 text-[#737373] mb-2" />
-              <p className="text-xs font-medium text-[#0A0A0A] mb-1">No sessions yet</p>
-              <p className="text-[11px] text-[#737373] leading-relaxed">
+            <div className="border border-dashed border-[var(--border)] bg-[var(--surface)] p-6 text-left">
+              <Sparkles className="w-4 h-4 text-[var(--fg-muted)] mb-2" />
+              <p className="text-xs font-medium text-[var(--fg)] mb-1">No sessions yet</p>
+              <p className="text-[11px] text-[var(--fg-muted)] leading-relaxed">
                 Click &ldquo;New Session&rdquo; or start chatting in the input below to create your first conversation.
               </p>
             </div>
           ) : (
-            <div className="border border-[#E5E5E5] bg-white divide-y divide-[#E5E5E5] overflow-hidden">
+            <div className="border border-[var(--border)] bg-[var(--surface)] divide-y divide-[var(--border)] overflow-hidden">
               {sessions.map((session) => {
                 const isActive = session.id === activeSessionId;
                 return (
@@ -279,8 +279,8 @@ export function ConversationsHistoryView() {
                     }}
                     className={`group relative p-4 cursor-pointer transition-colors ${
                       isActive
-                        ? "bg-[#FAFAFA]"
-                        : "hover:bg-[#F5F5F5]"
+                        ? "bg-[var(--bg-subtle)]"
+                        : "hover:bg-[var(--hover)]"
                     }`}
                   >
                     {isActive && (
@@ -288,15 +288,15 @@ export function ConversationsHistoryView() {
                     )}
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0 flex-1">
-                        <p className={`text-xs font-semibold truncate ${isActive ? "text-[#0A0A0A]" : "text-[#0A0A0A]"}`}>
+                        <p className={`text-xs font-semibold truncate ${isActive ? "text-[var(--fg)]" : "text-[var(--fg)]"}`}>
                           {session.title || "Untitled session"}
                         </p>
                         <div className="flex items-center gap-2 mt-1">
-                          <span className="text-[10px] text-[#737373] font-mono">
+                          <span className="text-[10px] text-[var(--fg-muted)] font-mono">
                             {session.messageCount} msg{session.messageCount !== 1 ? "s" : ""}
                           </span>
-                          <span className="text-[#E5E5E5]">·</span>
-                          <span className="text-[10px] text-[#737373] flex items-center gap-1">
+                          <span className="text-[#E5E5E5]">Â·</span>
+                          <span className="text-[10px] text-[var(--fg-muted)] flex items-center gap-1">
                             <Clock className="w-2.5 h-2.5" />
                             {timeAgo(new Date(session.startedAt))}
                           </span>
@@ -308,7 +308,7 @@ export function ConversationsHistoryView() {
                           e.stopPropagation();
                           deleteSession(session.id);
                         }}
-                        className="opacity-0 group-hover:opacity-100 p-1 text-[#737373] hover:text-[#E30613] transition-all rounded-[1px]"
+                        className="opacity-0 group-hover:opacity-100 p-1 text-[var(--fg-muted)] hover:text-[#E30613] transition-all rounded-[1px]"
                         aria-label="Delete session"
                       >
                         <X className="w-3 h-3" />
@@ -321,28 +321,28 @@ export function ConversationsHistoryView() {
           )}
         </div>
 
-        {/* ── Chat panel ── */}
-        <div className="lg:col-span-8 bg-white border border-[#E5E5E5] flex flex-col" style={{ height: "580px" }}>
+        {/* â”€â”€ Chat panel â”€â”€ */}
+        <div className="lg:col-span-8 bg-[var(--surface)] border border-[var(--border)] flex flex-col" style={{ height: "580px" }}>
           {/* Header */}
-          <div className="flex items-center justify-between px-5 py-3 border-b border-[#E5E5E5] shrink-0">
+          <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border)] shrink-0">
             <div className="flex items-center gap-2">
               {activeSession && (
                 <button
                   type="button"
                   onClick={() => setActiveSessionId(null)}
-                  className="md:hidden p-1 text-[#737373] hover:text-[#0A0A0A]"
+                  className="md:hidden p-1 text-[var(--fg-muted)] hover:text-[var(--fg)]"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                 </button>
               )}
-              <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#737373]">
+              <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--fg-muted)]">
                 {activeSession ? activeSession.title.slice(0, 50) : "No session selected"}
               </p>
             </div>
             {activeSession && (
               <div className="flex items-center gap-2">
                 {activeSession.conversationId && (
-                  <span className="text-[10px] font-mono text-[#737373] border border-[#E5E5E5] px-1.5 py-0.5 rounded-[1px] hidden sm:block">
+                  <span className="text-[10px] font-mono text-[var(--fg-muted)] border border-[var(--border)] px-1.5 py-0.5 rounded-[1px] hidden sm:block">
                     {activeSession.conversationId.slice(0, 12)}...
                   </span>
                 )}
@@ -358,7 +358,7 @@ export function ConversationsHistoryView() {
                     );
                     setExpandedSources({});
                   }}
-                  className="p-1.5 text-[#737373] hover:text-[#0A0A0A] border border-transparent hover:border-[#E5E5E5] rounded-[1px] transition-colors"
+                  className="p-1.5 text-[var(--fg-muted)] hover:text-[var(--fg)] border border-transparent hover:border-[var(--border)] rounded-[1px] transition-colors"
                   title="Clear messages"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
@@ -371,19 +371,19 @@ export function ConversationsHistoryView() {
           <div className="flex-1 overflow-y-auto p-5 space-y-5">
             {!activeSession ? (
               <div className="h-full flex flex-col items-start justify-center max-w-md">
-                <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#737373] mb-1">
+                <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--fg-muted)] mb-1">
                   No session open
                 </p>
-                <h3 className="text-sm font-semibold text-[#0A0A0A] mb-2">
+                <h3 className="text-sm font-semibold text-[var(--fg)] mb-2">
                   Select a session or start a new one
                 </h3>
-                <p className="text-xs text-[#737373] mb-5 leading-relaxed">
+                <p className="text-xs text-[var(--fg-muted)] mb-5 leading-relaxed">
                   Conversations are saved locally in your browser session. Start typing below to create a new session instantly.
                 </p>
                 <button
                   type="button"
                   onClick={createNewSession}
-                  className="px-4 py-2 text-xs font-medium uppercase tracking-[0.05em] bg-[#0A0A0A] hover:bg-[#262626] text-white rounded-[1px] inline-flex items-center gap-2"
+                  className="px-4 py-2 text-xs font-medium uppercase tracking-[0.05em] btn-primary rounded-[1px] inline-flex items-center gap-2"
                 >
                   <MessageSquare className="w-3.5 h-3.5" />
                   Start new session
@@ -391,9 +391,9 @@ export function ConversationsHistoryView() {
               </div>
             ) : activeSession.messages.length === 0 ? (
               <div className="h-full flex flex-col items-start justify-center max-w-md">
-                <Bot className="w-5 h-5 text-[#737373] mb-3" />
-                <p className="text-xs font-semibold text-[#0A0A0A] mb-1">Session ready</p>
-                <p className="text-[11px] text-[#737373] leading-relaxed">
+                <Bot className="w-5 h-5 text-[var(--fg-muted)] mb-3" />
+                <p className="text-xs font-semibold text-[var(--fg)] mb-1">Session ready</p>
+                <p className="text-[11px] text-[var(--fg-muted)] leading-relaxed">
                   Ask a question about your knowledge base to begin. The AI will retrieve relevant document chunks and formulate an answer.
                 </p>
               </div>
@@ -406,14 +406,14 @@ export function ConversationsHistoryView() {
                     key={idx}
                     className={`flex flex-col ${isUser ? "items-end" : "items-start"}`}
                   >
-                    <span className="text-[10px] font-mono text-[#737373] uppercase tracking-wider mb-1">
+                    <span className="text-[10px] font-mono text-[var(--fg-muted)] uppercase tracking-wider mb-1">
                       {isUser ? "You" : "Converso AI"}
                     </span>
                     <div
                       className={`max-w-[85%] p-3.5 text-xs leading-relaxed border rounded-[1px] ${
                         isUser
-                          ? "bg-[#FAFAFA] border-[#E5E5E5] text-[#0A0A0A] font-mono"
-                          : "bg-white border-[#E5E5E5] text-[#0A0A0A]"
+                          ? "bg-[var(--bg-subtle)] border-[var(--border)] text-[var(--fg)] font-mono"
+                          : "bg-[var(--surface)] border-[var(--border)] text-[var(--fg)]"
                       }`}
                     >
                       <div className="whitespace-pre-wrap">{msg.content}</div>
@@ -437,23 +437,23 @@ export function ConversationsHistoryView() {
                         <button
                           type="button"
                           onClick={() => toggleSources(idx)}
-                          className="text-[11px] text-[#737373] hover:text-[#0A0A0A] inline-flex items-center gap-1.5 transition-colors"
+                          className="text-[11px] text-[var(--fg-muted)] hover:text-[var(--fg)] inline-flex items-center gap-1.5 transition-colors"
                         >
                           <FileText className="w-3 h-3 text-[#E30613]" />
                           <span>{msg.sources.length} source{msg.sources.length !== 1 ? "s" : ""} cited</span>
                           {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                         </button>
                         {isExpanded && (
-                          <div className="mt-1.5 border border-[#E5E5E5] bg-[#FAFAFA] divide-y divide-[#E5E5E5] text-[11px]">
+                          <div className="mt-1.5 border border-[var(--border)] bg-[var(--bg-subtle)] divide-y divide-[var(--border)] text-[11px]">
                             {msg.sources.map((src, si) => (
                               <div key={si} className="p-3 space-y-1">
-                                <div className="flex items-center justify-between text-[#0A0A0A] font-medium">
+                                <div className="flex items-center justify-between text-[var(--fg)] font-medium">
                                   <span className="truncate">[{si + 1}] {src.filename}</span>
                                   <span className="font-mono text-[10px] text-[#16A34A] tabular-nums shrink-0 ml-2">
                                     {(src.similarity * 100).toFixed(1)}%
                                   </span>
                                 </div>
-                                <p className="text-[#737373] font-mono whitespace-pre-wrap line-clamp-3 bg-white p-2 border border-[#E5E5E5]">
+                                <p className="text-[var(--fg-muted)] font-mono whitespace-pre-wrap line-clamp-3 bg-[var(--surface)] p-2 border border-[var(--border)]">
                                   {src.content}
                                 </p>
                               </div>
@@ -469,8 +469,8 @@ export function ConversationsHistoryView() {
 
             {sending && (
               <div className="flex flex-col items-start">
-                <span className="text-[10px] font-mono text-[#737373] uppercase mb-1">Converso AI</span>
-                <div className="p-3 bg-white border border-[#E5E5E5] text-xs text-[#737373] font-mono rounded-[1px] inline-flex items-center gap-2">
+                <span className="text-[10px] font-mono text-[var(--fg-muted)] uppercase mb-1">Converso AI</span>
+                <div className="p-3 bg-[var(--surface)] border border-[var(--border)] text-xs text-[var(--fg-muted)] font-mono rounded-[1px] inline-flex items-center gap-2">
                   <span className="w-1.5 h-1.5 bg-[#E30613] rounded-full animate-ping" />
                   Thinking...
                 </div>
@@ -487,7 +487,7 @@ export function ConversationsHistoryView() {
           </div>
 
           {/* Input bar */}
-          <div className="p-4 border-t border-[#E5E5E5] shrink-0 bg-white">
+          <div className="p-4 border-t border-[var(--border)] shrink-0 bg-[var(--surface)]">
             <div className="flex items-end gap-2">
               <textarea
                 ref={textareaRef}
@@ -501,19 +501,19 @@ export function ConversationsHistoryView() {
                     ? "Continue this conversation... (Enter to send)"
                     : "Start typing to create a new session... (Enter to send)"
                 }
-                className="flex-1 p-2.5 text-xs bg-white border border-[#E5E5E5] text-[#0A0A0A] placeholder-[#A3A3A3] focus:outline-none focus:ring-1 focus:ring-[#E30613] rounded-[1px] resize-none leading-relaxed"
+                className="flex-1 p-2.5 text-xs bg-[var(--surface)] border border-[var(--border)] text-[var(--fg)] placeholder-[var(--fg-faint)] focus:outline-none focus:ring-1 focus:ring-[#E30613] rounded-[1px] resize-none leading-relaxed"
               />
               <button
                 type="button"
                 onClick={handleSend}
                 disabled={sending || !input.trim()}
-                className="px-3.5 py-2.5 text-xs font-medium uppercase tracking-[0.05em] bg-[#0A0A0A] hover:bg-[#262626] text-white transition-colors rounded-[1px] disabled:opacity-40 inline-flex items-center gap-1.5 shrink-0 h-11"
+                className="px-3.5 py-2.5 text-xs font-medium uppercase tracking-[0.05em] btn-primary transition-colors rounded-[1px] disabled:opacity-40 inline-flex items-center gap-1.5 shrink-0 h-11"
               >
                 <Send className="w-3.5 h-3.5" />
               </button>
             </div>
-            <p className="text-[10px] text-[#737373] font-mono mt-1.5">
-              Workspace: {currentWorkspace.name} · RAG: Groq + Jina
+            <p className="text-[10px] text-[var(--fg-muted)] font-mono mt-1.5">
+              Workspace: {currentWorkspace.name} Â· RAG: Groq + Jina
             </p>
           </div>
         </div>
@@ -521,3 +521,6 @@ export function ConversationsHistoryView() {
     </div>
   );
 }
+
+
+

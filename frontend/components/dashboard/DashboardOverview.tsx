@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
@@ -170,14 +170,14 @@ export function DashboardOverview() {
           <div className="flex items-center gap-2">
             <Link
               href="/conversations"
-              className="px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.05em] bg-white border border-[#E5E5E5] text-[#0A0A0A] hover:bg-[#F5F5F5] transition-colors rounded-[1px] inline-flex items-center gap-2"
+              className="px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.05em] bg-[var(--surface)] border border-[var(--border)] text-[var(--fg)] hover:bg-[var(--hover)] transition-colors rounded-[1px] inline-flex items-center gap-2"
             >
               <MessageSquare className="w-3.5 h-3.5" />
               <span>Conversations</span>
             </Link>
             <Link
               href="/playground"
-              className="px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.05em] bg-[#0A0A0A] text-white hover:bg-[#262626] transition-colors rounded-[1px] inline-flex items-center gap-2"
+              className="px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.05em] btn-primary transition-colors rounded-[1px] inline-flex items-center gap-2"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>Test Chatbot</span>
@@ -191,96 +191,96 @@ export function DashboardOverview() {
 
       {/* Quick Action Matrix */}
       <div>
-        <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#737373] mb-3">
+        <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--fg-muted)] mb-3">
           Quick Actions
         </p>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           <Link
             href="/chatbot"
-            className="p-4 bg-white border border-[#E5E5E5] hover:border-[#0A0A0A] transition-colors group flex flex-col justify-between"
+            className="p-4 bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--fg)] transition-colors group flex flex-col justify-between"
           >
             <div>
-              <Bot className="w-4 h-4 text-[#737373] group-hover:text-[#E30613] transition-colors mb-2.5" />
-              <p className="text-xs font-semibold text-[#0A0A0A]">
+              <Bot className="w-4 h-4 text-[var(--fg-muted)] group-hover:text-[#E30613] transition-colors mb-2.5" />
+              <p className="text-xs font-semibold text-[var(--fg)]">
                 Configure Chatbot
               </p>
-              <p className="text-[11px] text-[#737373] mt-1">
+              <p className="text-[11px] text-[var(--fg-muted)] mt-1">
                 Instructions, tone, and brand.
               </p>
             </div>
-            <span className="text-[11px] text-[#0A0A0A] font-medium mt-4 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+            <span className="text-[11px] text-[var(--fg)] font-medium mt-4 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
               Edit <ArrowRight className="w-3 h-3 text-[#E30613]" />
             </span>
           </Link>
 
           <Link
             href="/knowledge-base"
-            className="p-4 bg-white border border-[#E5E5E5] hover:border-[#0A0A0A] transition-colors group flex flex-col justify-between"
+            className="p-4 bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--fg)] transition-colors group flex flex-col justify-between"
           >
             <div>
-              <FileText className="w-4 h-4 text-[#737373] group-hover:text-[#E30613] transition-colors mb-2.5" />
-              <p className="text-xs font-semibold text-[#0A0A0A]">
+              <FileText className="w-4 h-4 text-[var(--fg-muted)] group-hover:text-[#E30613] transition-colors mb-2.5" />
+              <p className="text-xs font-semibold text-[var(--fg)]">
                 Knowledge Base
               </p>
-              <p className="text-[11px] text-[#737373] mt-1">
+              <p className="text-[11px] text-[var(--fg-muted)] mt-1">
                 Upload PDFs, test vector search.
               </p>
             </div>
-            <span className="text-[11px] text-[#0A0A0A] font-medium mt-4 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+            <span className="text-[11px] text-[var(--fg)] font-medium mt-4 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
               Upload <ArrowRight className="w-3 h-3 text-[#E30613]" />
             </span>
           </Link>
 
           <Link
             href="/tickets"
-            className="p-4 bg-white border border-[#E5E5E5] hover:border-[#0A0A0A] transition-colors group flex flex-col justify-between"
+            className="p-4 bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--fg)] transition-colors group flex flex-col justify-between"
           >
             <div>
-              <LifeBuoy className="w-4 h-4 text-[#737373] group-hover:text-[#E30613] transition-colors mb-2.5" />
-              <p className="text-xs font-semibold text-[#0A0A0A]">
+              <LifeBuoy className="w-4 h-4 text-[var(--fg-muted)] group-hover:text-[#E30613] transition-colors mb-2.5" />
+              <p className="text-xs font-semibold text-[var(--fg)]">
                 Support Tickets
               </p>
-              <p className="text-[11px] text-[#737373] mt-1">
+              <p className="text-[11px] text-[var(--fg-muted)] mt-1">
                 Manage human handoff escalations.
               </p>
             </div>
-            <span className="text-[11px] text-[#0A0A0A] font-medium mt-4 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+            <span className="text-[11px] text-[var(--fg)] font-medium mt-4 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
               Inbox <ArrowRight className="w-3 h-3 text-[#E30613]" />
             </span>
           </Link>
 
           <Link
             href="/playground"
-            className="p-4 bg-white border border-[#E5E5E5] hover:border-[#0A0A0A] transition-colors group flex flex-col justify-between"
+            className="p-4 bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--fg)] transition-colors group flex flex-col justify-between"
           >
             <div>
-              <Sparkles className="w-4 h-4 text-[#737373] group-hover:text-[#E30613] transition-colors mb-2.5" />
-              <p className="text-xs font-semibold text-[#0A0A0A]">
+              <Sparkles className="w-4 h-4 text-[var(--fg-muted)] group-hover:text-[#E30613] transition-colors mb-2.5" />
+              <p className="text-xs font-semibold text-[var(--fg)]">
                 AI Playground
               </p>
-              <p className="text-[11px] text-[#737373] mt-1">
+              <p className="text-[11px] text-[var(--fg-muted)] mt-1">
                 Chat and inspect source chunks.
               </p>
             </div>
-            <span className="text-[11px] text-[#0A0A0A] font-medium mt-4 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+            <span className="text-[11px] text-[var(--fg)] font-medium mt-4 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
               Launch <ArrowRight className="w-3 h-3 text-[#E30613]" />
             </span>
           </Link>
 
           <Link
             href="/conversations"
-            className="p-4 bg-white border border-[#E5E5E5] hover:border-[#0A0A0A] transition-colors group flex flex-col justify-between"
+            className="p-4 bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--fg)] transition-colors group flex flex-col justify-between"
           >
             <div>
-              <MessageSquare className="w-4 h-4 text-[#737373] group-hover:text-[#E30613] transition-colors mb-2.5" />
-              <p className="text-xs font-semibold text-[#0A0A0A]">
+              <MessageSquare className="w-4 h-4 text-[var(--fg-muted)] group-hover:text-[#E30613] transition-colors mb-2.5" />
+              <p className="text-xs font-semibold text-[var(--fg)]">
                 Conversations
               </p>
-              <p className="text-[11px] text-[#737373] mt-1">
+              <p className="text-[11px] text-[var(--fg-muted)] mt-1">
                 Browse session history &amp; replay chats.
               </p>
             </div>
-            <span className="text-[11px] text-[#0A0A0A] font-medium mt-4 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+            <span className="text-[11px] text-[var(--fg)] font-medium mt-4 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
               Browse <ArrowRight className="w-3 h-3 text-[#E30613]" />
             </span>
           </Link>
@@ -291,39 +291,39 @@ export function DashboardOverview() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Getting Started Checklist */}
-        <div className="lg:col-span-5 border border-[#E5E5E5] bg-white p-6">
-          <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#737373] mb-1">
+        <div className="lg:col-span-5 border border-[var(--border)] bg-[var(--surface)] p-6">
+          <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--fg-muted)] mb-1">
             Setup Checklist
           </p>
-          <h2 className="text-sm font-semibold text-[#0A0A0A] mb-4">
+          <h2 className="text-sm font-semibold text-[var(--fg)] mb-4">
             Deployment Readiness
           </h2>
 
-          <div className="divide-y divide-[#E5E5E5]">
+          <div className="divide-y divide-[var(--border)]">
             {checklist.map((item, idx) => (
               <div key={idx} className="py-3 flex items-start gap-3">
                 {item.done ? (
                   <CheckCircle2 className="w-4 h-4 text-[#16A34A] shrink-0 mt-0.5" />
                 ) : (
-                  <Circle className="w-4 h-4 text-[#A3A3A3] shrink-0 mt-0.5" />
+                  <Circle className="w-4 h-4 text-[var(--fg-faint)] shrink-0 mt-0.5" />
                 )}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
                     <p
                       className={`text-xs font-medium ${
-                        item.done ? "text-[#0A0A0A]" : "text-[#0A0A0A]"
+                        item.done ? "text-[var(--fg)]" : "text-[var(--fg)]"
                       }`}
                     >
                       {item.title}
                     </p>
                     <Link
                       href={item.href}
-                      className="text-[11px] text-[#737373] hover:text-[#0A0A0A] uppercase tracking-wider underline shrink-0"
+                      className="text-[11px] text-[var(--fg-muted)] hover:text-[var(--fg)] uppercase tracking-wider underline shrink-0"
                     >
                       {item.done ? "Manage" : "Action"}
                     </Link>
                   </div>
-                  <p className="text-[11px] text-[#737373] mt-0.5 leading-normal">
+                  <p className="text-[11px] text-[var(--fg-muted)] mt-0.5 leading-normal">
                     {item.desc}
                   </p>
                 </div>
@@ -333,19 +333,19 @@ export function DashboardOverview() {
         </div>
 
         {/* Recent Tickets Section */}
-        <div className="lg:col-span-7 border border-[#E5E5E5] bg-white p-6">
+        <div className="lg:col-span-7 border border-[var(--border)] bg-[var(--surface)] p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#737373] mb-0.5">
+              <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--fg-muted)] mb-0.5">
                 Activity
               </p>
-              <h2 className="text-sm font-semibold text-[#0A0A0A]">
+              <h2 className="text-sm font-semibold text-[var(--fg)]">
                 Recent Support Tickets
               </h2>
             </div>
             <Link
               href="/tickets"
-              className="text-xs font-medium text-[#737373] hover:text-[#0A0A0A] inline-flex items-center gap-1"
+              className="text-xs font-medium text-[var(--fg-muted)] hover:text-[var(--fg)] inline-flex items-center gap-1"
             >
               <span>View All ({tickets.length})</span>
               <ArrowRight className="w-3 h-3" />
@@ -353,19 +353,19 @@ export function DashboardOverview() {
           </div>
 
           {recentTickets.length === 0 ? (
-            <div className="py-8 text-left border-t border-[#E5E5E5]">
-              <p className="text-xs font-medium text-[#0A0A0A]">
+            <div className="py-8 text-left border-t border-[var(--border)]">
+              <p className="text-xs font-medium text-[var(--fg)]">
                 No support tickets yet
               </p>
-              <p className="text-xs text-[#737373] mt-1">
+              <p className="text-xs text-[var(--fg-muted)] mt-1">
                 Tickets created by human handoffs will appear here.
               </p>
             </div>
           ) : (
-            <div className="border-t border-[#E5E5E5] overflow-x-auto">
+            <div className="border-t border-[var(--border)] overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="border-b border-[#E5E5E5] text-[#737373]">
+                  <tr className="border-b border-[var(--border)] text-[var(--fg-muted)]">
                     <th className="py-2.5 pr-4 font-medium uppercase tracking-[0.06em] text-[10px]">
                       Subject
                     </th>
@@ -380,16 +380,16 @@ export function DashboardOverview() {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#E5E5E5]">
+                <tbody className="divide-y divide-[var(--border)]">
                   {recentTickets.map((ticket) => (
                     <tr
                       key={ticket.id}
-                      className="hover:bg-[#F5F5F5] transition-colors"
+                      className="hover:bg-[var(--hover)] transition-colors"
                     >
-                      <td className="py-2.5 pr-4 font-medium text-[#0A0A0A] max-w-[200px] truncate">
+                      <td className="py-2.5 pr-4 font-medium text-[var(--fg)] max-w-[200px] truncate">
                         {ticket.subject}
                       </td>
-                      <td className="py-2.5 px-4 text-[#737373] max-w-[150px] truncate">
+                      <td className="py-2.5 px-4 text-[var(--fg-muted)] max-w-[150px] truncate">
                         {ticket.customerName ||
                           ticket.customerEmail ||
                           ticket.createdBy}
@@ -397,7 +397,7 @@ export function DashboardOverview() {
                       <td className="py-2.5 px-4">
                         <StatusBadge status={ticket.status} />
                       </td>
-                      <td className="py-2.5 pl-4 text-right text-[#737373] font-mono text-[11px] tabular-nums">
+                      <td className="py-2.5 pl-4 text-right text-[var(--fg-muted)] font-mono text-[11px] tabular-nums">
                         {new Date(ticket.createdAt).toLocaleDateString()}
                       </td>
                     </tr>
@@ -411,3 +411,6 @@ export function DashboardOverview() {
     </div>
   );
 }
+
+
+

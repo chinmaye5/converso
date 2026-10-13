@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useTheme } from "../../lib/theme-context";
+import { useUser } from "@clerk/nextjs";
 import {
   Bot,
   FileText,
@@ -19,6 +21,8 @@ import {
   Users,
   Menu,
   X,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 const FEATURES = [
@@ -87,6 +91,8 @@ const STATS = [
 export function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { theme, toggleTheme } = useTheme();
+  const { isSignedIn } = useUser();
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
@@ -127,12 +133,38 @@ export function LandingPage() {
           </div>
 
           <div className="hidden md:flex items-center gap-3">
-            <Link
-              href="/login"
-              className="px-3.5 py-1.5 text-xs font-medium text-white/70 hover:text-white transition-colors"
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              className="p-1.5 text-white/50 hover:text-white border border-white/10 hover:border-white/25 rounded-[1px] transition-colors"
             >
-              Sign in
-            </Link>
+              {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
+            {isSignedIn ? (
+              <Link
+                href="/dashboard"
+                className="px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.06em] bg-[#E30613] hover:bg-[#C50510] text-white rounded-[1px] transition-colors inline-flex items-center gap-1.5"
+              >
+                <LayoutDashboard className="w-3.5 h-3.5" />
+                Go to Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="px-3.5 py-1.5 text-xs font-medium text-white/70 hover:text-white transition-colors"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  href="/signup"
+                  className="px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.06em] bg-[#E30613] hover:bg-[#C50510] text-white rounded-[1px] transition-colors"
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
             <Link
               href="/signup"
               className="px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.06em] bg-[#E30613] hover:bg-[#C50510] text-white rounded-[1px] transition-colors"
@@ -156,6 +188,14 @@ export function LandingPage() {
             <a href="#features" onClick={() => setMobileMenuOpen(false)} className="block text-sm text-white/70 py-2">Features</a>
             <a href="#how" onClick={() => setMobileMenuOpen(false)} className="block text-sm text-white/70 py-2">How it works</a>
             <Link href="/login" className="block text-sm text-white/70 py-2">Sign in</Link>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="flex items-center gap-2 text-sm text-white/70 py-2"
+            >
+              {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              {theme === "dark" ? "Light mode" : "Dark mode"}
+            </button>
             <Link
               href="/signup"
               className="block w-full text-center py-2.5 text-sm font-semibold bg-[#E30613] text-white rounded-[1px]"

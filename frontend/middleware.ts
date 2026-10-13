@@ -1,4 +1,4 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+﻿import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 // Public routes — accessible without authentication.
 const isPublicRoute = createRouteMatcher([
@@ -21,3 +21,4 @@ export const config = {
     "/((?!_next/static|_next/image|favicon.ico).*)",
   ],
 };
+

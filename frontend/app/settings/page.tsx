@@ -1,4 +1,4 @@
-import { AppShell } from "../../components/layout/AppShell";
+﻿import { AppShell } from "../../components/layout/AppShell";
 import { WorkspaceSettingsView } from "../../components/settings/WorkspaceSettingsView";
 
 export default function SettingsPage() {
@@ -8,3 +8,4 @@ export default function SettingsPage() {
     </AppShell>
   );
 }
+

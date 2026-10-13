@@ -1,4 +1,4 @@
-import { AppShell } from "../../components/layout/AppShell";
+﻿import { AppShell } from "../../components/layout/AppShell";
 import { DashboardOverview } from "../../components/dashboard/DashboardOverview";
 
 export const metadata = {
@@ -13,3 +13,4 @@ export default function DashboardPage() {
     </AppShell>
   );
 }
+

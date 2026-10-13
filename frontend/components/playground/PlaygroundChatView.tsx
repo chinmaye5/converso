@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useRef, useEffect } from "react";
 import { useAuth } from "@clerk/nextjs";
@@ -127,7 +127,7 @@ export function PlaygroundChatView() {
             type="button"
             onClick={handleReset}
             disabled={messages.length === 0 && !conversationId}
-            className="px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.05em] bg-white border border-[#E5E5E5] text-[#0A0A0A] hover:bg-[#F5F5F5] transition-colors rounded-[1px] inline-flex items-center gap-1.5 disabled:opacity-40"
+            className="px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.05em] bg-[var(--surface)] border border-[var(--border)] text-[var(--fg)] hover:bg-[var(--hover)] transition-colors rounded-[1px] inline-flex items-center gap-1.5 disabled:opacity-40"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>New Session</span>
@@ -144,24 +144,24 @@ export function PlaygroundChatView() {
       )}
 
       {/* Main Chat Frame */}
-      <div className="bg-white border border-[#E5E5E5] flex flex-col h-[650px] rounded-[1px]">
+      <div className="bg-[var(--surface)] border border-[var(--border)] flex flex-col h-[650px] rounded-[1px]">
         {/* Chat Feed */}
-        <div className="flex-1 p-6 overflow-y-auto space-y-6 divide-y divide-[#E5E5E5]/50">
+        <div className="flex-1 p-6 overflow-y-auto space-y-6 divide-y divide-[var(--border)]">
           {messages.length === 0 ? (
             <div className="h-full flex flex-col justify-center items-start max-w-lg">
-              <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#737373] mb-1">
+              <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--fg-muted)] mb-1">
                 Assistant Ready
               </p>
-              <h3 className="text-base font-semibold text-[#0A0A0A] mb-2">
+              <h3 className="text-base font-semibold text-[var(--fg)] mb-2">
                 Begin testing your chatbot
               </h3>
-              <p className="text-xs text-[#737373] mb-6 leading-relaxed">
+              <p className="text-xs text-[var(--fg-muted)] mb-6 leading-relaxed">
                 Queries will retrieve relevant chunks from your uploaded PDF
                 knowledge base and formulate answers using Groq LLM.
               </p>
 
               <div className="space-y-2 w-full">
-                <p className="text-[10px] font-medium uppercase tracking-[0.08em] text-[#737373]">
+                <p className="text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--fg-muted)]">
                   Quick Test Prompts
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -174,7 +174,7 @@ export function PlaygroundChatView() {
                       key={promptText}
                       type="button"
                       onClick={() => handleSend(promptText)}
-                      className="text-left text-xs px-3 py-1.5 bg-[#FAFAFA] border border-[#E5E5E5] hover:border-[#0A0A0A] text-[#0A0A0A] rounded-[1px] transition-colors"
+                      className="text-left text-xs px-3 py-1.5 bg-[var(--bg-subtle)] border border-[var(--border)] hover:border-[var(--fg)] text-[var(--fg)] rounded-[1px] transition-colors"
                     >
                       &quot;{promptText}&quot;
                     </button>
@@ -196,7 +196,7 @@ export function PlaygroundChatView() {
                 >
                   {/* Role Header */}
                   <div className="flex items-center gap-1.5 mb-1.5">
-                    <span className="text-[10px] font-mono text-[#737373] uppercase tracking-wider">
+                    <span className="text-[10px] font-mono text-[var(--fg-muted)] uppercase tracking-wider">
                       {isUser ? "User / Customer" : "Assistant (Converso)"}
                     </span>
                   </div>
@@ -205,8 +205,8 @@ export function PlaygroundChatView() {
                   <div
                     className={`max-w-[85%] p-4 text-xs rounded-[1px] leading-relaxed border ${
                       isUser
-                        ? "bg-[#FAFAFA] border-[#E5E5E5] text-[#0A0A0A] font-mono"
-                        : "bg-white border-[#E5E5E5] text-[#0A0A0A]"
+                        ? "bg-[var(--bg-subtle)] border-[var(--border)] text-[var(--fg)] font-mono"
+                        : "bg-[var(--surface)] border-[var(--border)] text-[var(--fg)]"
                     }`}
                   >
                     <div className="whitespace-pre-wrap">{msg.content}</div>
@@ -233,7 +233,7 @@ export function PlaygroundChatView() {
                       <button
                         type="button"
                         onClick={() => toggleSources(idx)}
-                        className="text-[11px] text-[#737373] hover:text-[#0A0A0A] inline-flex items-center gap-1.5 transition-colors"
+                        className="text-[11px] text-[var(--fg-muted)] hover:text-[var(--fg)] inline-flex items-center gap-1.5 transition-colors"
                       >
                         <FileText className="w-3 h-3 text-[#E30613]" />
                         <span>
@@ -248,10 +248,10 @@ export function PlaygroundChatView() {
                       </button>
 
                       {isExpanded && (
-                        <div className="mt-2 border border-[#E5E5E5] bg-[#FAFAFA] divide-y divide-[#E5E5E5] text-[11px]">
+                        <div className="mt-2 border border-[var(--border)] bg-[var(--bg-subtle)] divide-y divide-[var(--border)] text-[11px]">
                           {msg.sources.map((src, sIdx) => (
                             <div key={sIdx} className="p-3 space-y-1">
-                              <div className="flex items-center justify-between text-[#0A0A0A] font-medium">
+                              <div className="flex items-center justify-between text-[var(--fg)] font-medium">
                                 <span className="truncate">
                                   [{sIdx + 1}] {src.filename}
                                 </span>
@@ -259,7 +259,7 @@ export function PlaygroundChatView() {
                                   {(src.similarity * 100).toFixed(1)}% match
                                 </span>
                               </div>
-                              <p className="text-[#737373] font-mono whitespace-pre-wrap line-clamp-3 bg-white p-2 border border-[#E5E5E5]">
+                              <p className="text-[var(--fg-muted)] font-mono whitespace-pre-wrap line-clamp-3 bg-[var(--surface)] p-2 border border-[var(--border)]">
                                 {src.content}
                               </p>
                             </div>
@@ -276,10 +276,10 @@ export function PlaygroundChatView() {
           {/* Typing Indicator */}
           {sending && (
             <div className="pt-4 flex flex-col items-start">
-              <span className="text-[10px] font-mono text-[#737373] uppercase mb-1">
+              <span className="text-[10px] font-mono text-[var(--fg-muted)] uppercase mb-1">
                 Assistant (Converso)
               </span>
-              <div className="p-3 bg-white border border-[#E5E5E5] text-xs text-[#737373] font-mono rounded-[1px] inline-flex items-center gap-2">
+              <div className="p-3 bg-[var(--surface)] border border-[var(--border)] text-xs text-[var(--fg-muted)] font-mono rounded-[1px] inline-flex items-center gap-2">
                 <span className="w-1.5 h-1.5 bg-[#E30613] rounded-full animate-ping" />
                 <span>Searching knowledge chunks & formulating response...</span>
               </div>
@@ -290,7 +290,7 @@ export function PlaygroundChatView() {
         </div>
 
         {/* Input Bar */}
-        <div className="p-4 bg-white border-t border-[#E5E5E5]">
+        <div className="p-4 bg-[var(--surface)] border-t border-[var(--border)]">
           <div className="flex items-end gap-3">
             <textarea
               ref={textareaRef}
@@ -300,19 +300,19 @@ export function PlaygroundChatView() {
               onKeyDown={handleKeyDown}
               disabled={sending}
               placeholder="Ask a question about your business knowledge... (Enter to send, Shift+Enter for newline)"
-              className="flex-1 p-2.5 text-xs bg-white border border-[#E5E5E5] text-[#0A0A0A] placeholder-[#A3A3A3] focus:outline-none focus:ring-1 focus:ring-[#E30613] rounded-[1px] resize-none leading-relaxed"
+              className="flex-1 p-2.5 text-xs bg-[var(--surface)] border border-[var(--border)] text-[var(--fg)] placeholder-[var(--fg-faint)] focus:outline-none focus:ring-1 focus:ring-[#E30613] rounded-[1px] resize-none leading-relaxed"
             />
             <button
               type="button"
               onClick={() => handleSend()}
               disabled={sending || !input.trim()}
-              className="px-4 py-2.5 text-xs font-medium uppercase tracking-[0.05em] bg-[#0A0A0A] hover:bg-[#262626] text-white transition-colors rounded-[1px] disabled:opacity-40 inline-flex items-center gap-2 shrink-0 h-11"
+              className="px-4 py-2.5 text-xs font-medium uppercase tracking-[0.05em] btn-primary transition-colors rounded-[1px] disabled:opacity-40 inline-flex items-center gap-2 shrink-0 h-11"
             >
               <span>Send</span>
               <Send className="w-3.5 h-3.5" />
             </button>
           </div>
-          <div className="flex justify-between items-center text-[10px] text-[#737373] font-mono mt-2">
+          <div className="flex justify-between items-center text-[10px] text-[var(--fg-muted)] font-mono mt-2">
             <span>
               Session: {conversationId ? `${conversationId.slice(0, 16)}...` : "New session"}
             </span>
@@ -323,3 +323,6 @@ export function PlaygroundChatView() {
     </div>
   );
 }
+
+
+

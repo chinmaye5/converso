@@ -1,4 +1,4 @@
-import React, { type ReactNode } from "react";
+﻿import React, { type ReactNode } from "react";
 
 interface EmptyStateProps {
   section?: string;
@@ -14,19 +14,21 @@ export function EmptyState({
   action,
 }: EmptyStateProps) {
   return (
-    <div className="border border-[#E5E5E5] bg-white p-8 md:p-10 text-left">
+    <div className="border border-[var(--border)] bg-[var(--surface)] p-8 md:p-10 text-left">
       {section && (
-        <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#737373] mb-2">
+        <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--fg-muted)] mb-2">
           {section}
         </p>
       )}
-      <h3 className="text-base md:text-lg font-semibold text-[#0A0A0A] mb-1.5">
+      <h3 className="text-base md:text-lg font-semibold text-[var(--fg)] mb-1.5">
         {title}
       </h3>
-      <p className="text-sm text-[#737373] max-w-md mb-6 leading-relaxed">
+      <p className="text-sm text-[var(--fg-muted)] max-w-md mb-6 leading-relaxed">
         {description}
       </p>
       {action && <div>{action}</div>}
     </div>
   );
 }
+
+

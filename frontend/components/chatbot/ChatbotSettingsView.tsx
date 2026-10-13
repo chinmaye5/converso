@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@clerk/nextjs";
@@ -174,13 +174,13 @@ export function ChatbotSettingsView() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left column: Configuration Form */}
-        <div className="lg:col-span-7 bg-white border border-[#E5E5E5] p-6 md:p-8">
+        <div className="lg:col-span-7 bg-[var(--surface)] border border-[var(--border)] p-6 md:p-8">
           <form onSubmit={handleSave} className="space-y-6">
             {/* Assistant Name */}
             <div>
               <label
                 htmlFor="bot-name"
-                className="block text-xs font-medium uppercase tracking-[0.05em] text-[#0A0A0A] mb-1.5"
+                className="block text-xs font-medium uppercase tracking-[0.05em] text-[var(--fg)] mb-1.5"
               >
                 Assistant Name
               </label>
@@ -192,10 +192,10 @@ export function ChatbotSettingsView() {
                 maxLength={100}
                 required
                 placeholder="e.g. Acme Support Assistant"
-                className="w-full px-3 py-2 text-sm bg-white border border-[#E5E5E5] text-[#0A0A0A] placeholder-[#A3A3A3] focus:outline-none focus:ring-1 focus:ring-[#E30613] rounded-[1px]"
+                className="w-full px-3 py-2 text-sm bg-[var(--surface)] border border-[var(--border)] text-[var(--fg)] placeholder-[var(--fg-faint)] focus:outline-none focus:ring-1 focus:ring-[#E30613] rounded-[1px]"
               />
-              <p className="text-[11px] text-[#737373] mt-1">
-                Displayed in the chat header and conversation responses (1–100 chars).
+              <p className="text-[11px] text-[var(--fg-muted)] mt-1">
+                Displayed in the chat header and conversation responses (1â€“100 chars).
               </p>
             </div>
 
@@ -204,11 +204,11 @@ export function ChatbotSettingsView() {
               <div className="flex items-center justify-between mb-1.5">
                 <label
                   htmlFor="bot-prompt"
-                  className="block text-xs font-medium uppercase tracking-[0.05em] text-[#0A0A0A]"
+                  className="block text-xs font-medium uppercase tracking-[0.05em] text-[var(--fg)]"
                 >
                   System Prompt Instructions
                 </label>
-                <span className="text-[11px] text-[#737373] font-mono tabular-nums">
+                <span className="text-[11px] text-[var(--fg-muted)] font-mono tabular-nums">
                   {systemPrompt.length} / 10,000
                 </span>
               </div>
@@ -219,20 +219,20 @@ export function ChatbotSettingsView() {
                 maxLength={10000}
                 rows={6}
                 required
-                className="w-full px-3 py-2 text-xs font-mono bg-white border border-[#E5E5E5] text-[#0A0A0A] placeholder-[#A3A3A3] focus:outline-none focus:ring-1 focus:ring-[#E30613] rounded-[1px] leading-relaxed resize-y"
+                className="w-full px-3 py-2 text-xs font-mono bg-[var(--surface)] border border-[var(--border)] text-[var(--fg)] placeholder-[var(--fg-faint)] focus:outline-none focus:ring-1 focus:ring-[#E30613] rounded-[1px] leading-relaxed resize-y"
               />
-              <p className="text-[11px] text-[#737373] mt-1">
+              <p className="text-[11px] text-[var(--fg-muted)] mt-1">
                 Instruction prompt sent to Groq. Defines boundaries, tone of voice, and guidelines.
               </p>
             </div>
 
             {/* Brand Color & Active Status Row */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2 border-t border-[#E5E5E5]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2 border-t border-[var(--border)]">
               {/* Brand Accent Color */}
               <div>
                 <label
                   htmlFor="bot-color"
-                  className="block text-xs font-medium uppercase tracking-[0.05em] text-[#0A0A0A] mb-1.5"
+                  className="block text-xs font-medium uppercase tracking-[0.05em] text-[var(--fg)] mb-1.5"
                 >
                   Brand Accent Color
                 </label>
@@ -242,7 +242,7 @@ export function ChatbotSettingsView() {
                     id="bot-color-picker"
                     value={primaryColor}
                     onChange={(e) => setPrimaryColor(e.target.value)}
-                    className="w-8 h-8 p-0 border border-[#E5E5E5] rounded-[1px] cursor-pointer bg-white"
+                    className="w-8 h-8 p-0 border border-[var(--border)] rounded-[1px] cursor-pointer bg-[var(--surface)]"
                   />
                   <input
                     id="bot-color"
@@ -252,10 +252,10 @@ export function ChatbotSettingsView() {
                     pattern="^#[0-9a-fA-F]{6}$"
                     maxLength={7}
                     required
-                    className="w-28 px-3 py-1.5 text-xs font-mono bg-white border border-[#E5E5E5] text-[#0A0A0A] rounded-[1px] focus:outline-none focus:ring-1 focus:ring-[#E30613]"
+                    className="w-28 px-3 py-1.5 text-xs font-mono bg-[var(--surface)] border border-[var(--border)] text-[var(--fg)] rounded-[1px] focus:outline-none focus:ring-1 focus:ring-[#E30613]"
                   />
                 </div>
-                <p className="text-[11px] text-[#737373] mt-1">
+                <p className="text-[11px] text-[var(--fg-muted)] mt-1">
                   Hex color used for widget accents and header branding.
                 </p>
               </div>
@@ -264,7 +264,7 @@ export function ChatbotSettingsView() {
               <div>
                 <label
                   htmlFor="bot-status"
-                  className="block text-xs font-medium uppercase tracking-[0.05em] text-[#0A0A0A] mb-1.5"
+                  className="block text-xs font-medium uppercase tracking-[0.05em] text-[var(--fg)] mb-1.5"
                 >
                   Availability Status
                 </label>
@@ -274,25 +274,25 @@ export function ChatbotSettingsView() {
                     type="checkbox"
                     checked={isActive}
                     onChange={(e) => setIsActive(e.target.checked)}
-                    className="w-4 h-4 text-[#E30613] rounded-[1px] border-[#E5E5E5] focus:ring-[#E30613]"
+                    className="w-4 h-4 text-[#E30613] rounded-[1px] border-[var(--border)] focus:ring-[#E30613]"
                   />
-                  <span className="text-xs font-medium text-[#0A0A0A]">
+                  <span className="text-xs font-medium text-[var(--fg)]">
                     {isActive ? "Active (Online)" : "Inactive (Offline)"}
                   </span>
                 </label>
-                <p className="text-[11px] text-[#737373] mt-1">
+                <p className="text-[11px] text-[var(--fg-muted)] mt-1">
                   When inactive, public visitor chat requests are paused.
                 </p>
               </div>
             </div>
 
             {/* Actions */}
-            <div className="pt-4 border-t border-[#E5E5E5] flex items-center justify-between">
+            <div className="pt-4 border-t border-[var(--border)] flex items-center justify-between">
               <button
                 type="button"
                 onClick={loadBot}
                 disabled={saving}
-                className="px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.04em] text-[#737373] hover:text-[#0A0A0A] transition-colors rounded-[1px] inline-flex items-center gap-1.5"
+                className="px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.04em] text-[var(--fg-muted)] hover:text-[var(--fg)] transition-colors rounded-[1px] inline-flex items-center gap-1.5"
               >
                 <RefreshCw className="w-3 h-3" />
                 <span>Reset</span>
@@ -301,7 +301,7 @@ export function ChatbotSettingsView() {
               <button
                 type="submit"
                 disabled={saving}
-                className="px-5 py-2 text-xs font-medium uppercase tracking-[0.06em] bg-[#0A0A0A] hover:bg-[#262626] text-white transition-colors rounded-[1px] disabled:opacity-50"
+                className="px-5 py-2 text-xs font-medium uppercase tracking-[0.06em] btn-primary transition-colors rounded-[1px] disabled:opacity-50"
               >
                 {saving ? "Saving Configuration..." : "Save Configuration"}
               </button>
@@ -312,30 +312,30 @@ export function ChatbotSettingsView() {
         {/* Right column: Preview + Share Link */}
         <div className="lg:col-span-5 space-y-4">
           <div className="flex items-center justify-between">
-            <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#737373]">
+            <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--fg-muted)]">
               Live Widget Preview
             </p>
-            <span className="text-[11px] text-[#737373]">
+            <span className="text-[11px] text-[var(--fg-muted)]">
               Simulated Display
             </span>
           </div>
 
           {/* Neutral outer frame per Swiss spec, brand color only inside */}
-          <div className="bg-white border border-[#E5E5E5] p-1 rounded-[1px]">
-            <div className="border border-[#E5E5E5] overflow-hidden flex flex-col h-[460px] bg-[#FAFAFA]">
+          <div className="bg-[var(--surface)] border border-[var(--border)] p-1 rounded-[1px]">
+            <div className="border border-[var(--border)] overflow-hidden flex flex-col h-[460px] bg-[var(--bg-subtle)]">
               {/* Simulated Widget Header with primaryColor */}
               <div
                 className="p-3.5 text-white flex items-center justify-between shrink-0"
                 style={{ backgroundColor: primaryColor }}
               >
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-xs">
+                  <div className="w-6 h-6 rounded-full bg-[var(--surface)]/20 flex items-center justify-center text-xs">
                     <Sparkles className="w-3.5 h-3.5 text-white" />
                   </div>
                   <div>
                     <p className="text-xs font-semibold leading-tight">{name}</p>
                     <p className="text-[10px] text-white/80 leading-none">
-                      {isActive ? "Online • Ready to assist" : "Offline"}
+                      {isActive ? "Online â€¢ Ready to assist" : "Offline"}
                     </p>
                   </div>
                 </div>
@@ -348,17 +348,17 @@ export function ChatbotSettingsView() {
               <div className="flex-1 p-4 space-y-3 overflow-y-auto text-xs">
                 {/* Bot Greeting */}
                 <div className="flex flex-col items-start max-w-[85%]">
-                  <span className="text-[9px] font-mono text-[#737373] uppercase mb-1">
+                  <span className="text-[9px] font-mono text-[var(--fg-muted)] uppercase mb-1">
                     {name}
                   </span>
-                  <div className="p-3 bg-white border border-[#E5E5E5] text-[#0A0A0A] rounded-[1px] leading-relaxed">
+                  <div className="p-3 bg-[var(--surface)] border border-[var(--border)] text-[var(--fg)] rounded-[1px] leading-relaxed">
                     Hello! I&apos;m your assistant for {currentWorkspace.name}. How can I assist you today?
                   </div>
                 </div>
 
                 {/* Simulated Customer Question */}
                 <div className="flex flex-col items-end self-end ml-auto max-w-[85%]">
-                  <span className="text-[9px] font-mono text-[#737373] uppercase mb-1">
+                  <span className="text-[9px] font-mono text-[var(--fg-muted)] uppercase mb-1">
                     Customer
                   </span>
                   <div
@@ -371,22 +371,22 @@ export function ChatbotSettingsView() {
 
                 {/* Simulated Bot Response */}
                 <div className="flex flex-col items-start max-w-[85%]">
-                  <span className="text-[9px] font-mono text-[#737373] uppercase mb-1">
+                  <span className="text-[9px] font-mono text-[var(--fg-muted)] uppercase mb-1">
                     {name}
                   </span>
-                  <div className="p-3 bg-white border border-[#E5E5E5] text-[#0A0A0A] rounded-[1px] leading-relaxed">
+                  <div className="p-3 bg-[var(--surface)] border border-[var(--border)] text-[var(--fg)] rounded-[1px] leading-relaxed">
                     According to our policy documents, returns are accepted within 30 days of purchase in original packaging.
                   </div>
                 </div>
               </div>
 
               {/* Simulated Input Bar */}
-              <div className="p-2.5 bg-white border-t border-[#E5E5E5] flex items-center gap-2 shrink-0">
+              <div className="p-2.5 bg-[var(--surface)] border-t border-[var(--border)] flex items-center gap-2 shrink-0">
                 <input
                   type="text"
                   disabled
                   placeholder="Type a message..."
-                  className="flex-1 px-2.5 py-1.5 text-xs bg-[#FAFAFA] border border-[#E5E5E5] text-[#737373] rounded-[1px]"
+                  className="flex-1 px-2.5 py-1.5 text-xs bg-[var(--bg-subtle)] border border-[var(--border)] text-[var(--fg-muted)] rounded-[1px]"
                 />
                 <button
                   type="button"
@@ -400,32 +400,32 @@ export function ChatbotSettingsView() {
             </div>
           </div>
 
-          {/* ── Shareable Public Link Card ── */}
-          <div className="bg-white border border-[#E5E5E5] p-5 space-y-3">
+          {/* â”€â”€ Shareable Public Link Card â”€â”€ */}
+          <div className="bg-[var(--surface)] border border-[var(--border)] p-5 space-y-3">
             <div className="flex items-center gap-2">
-              <Link2 className="w-4 h-4 text-[#0A0A0A]" />
-              <p className="text-xs font-semibold text-[#0A0A0A] uppercase tracking-[0.05em]">
+              <Link2 className="w-4 h-4 text-[var(--fg)]" />
+              <p className="text-xs font-semibold text-[var(--fg)] uppercase tracking-[0.05em]">
                 Public Chat Link
               </p>
             </div>
 
             {publicChatUrl ? (
               <>
-                <p className="text-[11px] text-[#737373] leading-relaxed">
+                <p className="text-[11px] text-[var(--fg-muted)] leading-relaxed">
                   Share this link with your customers. Anyone with the link can
-                  chat with your AI assistant and raise a support ticket — no
+                  chat with your AI assistant and raise a support ticket â€” no
                   login required.
                 </p>
 
                 <div className="flex items-stretch gap-2">
-                  <code className="flex-1 px-3 py-2 text-[11px] font-mono bg-[#FAFAFA] border border-[#E5E5E5] text-[#0A0A0A] rounded-[1px] break-all select-all">
+                  <code className="flex-1 px-3 py-2 text-[11px] font-mono bg-[var(--bg-subtle)] border border-[var(--border)] text-[var(--fg)] rounded-[1px] break-all select-all">
                     {publicChatUrl}
                   </code>
                   <button
                     type="button"
                     onClick={handleCopyLink}
                     title="Copy link"
-                    className="px-3 py-2 border border-[#E5E5E5] bg-white hover:bg-[#F5F5F5] text-[#0A0A0A] transition-colors rounded-[1px] flex items-center gap-1.5 text-xs font-medium shrink-0"
+                    className="px-3 py-2 border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--hover)] text-[var(--fg)] transition-colors rounded-[1px] flex items-center gap-1.5 text-xs font-medium shrink-0"
                   >
                     {linkCopied ? (
                       <>
@@ -445,14 +445,14 @@ export function ChatbotSettingsView() {
                   href={publicChatUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-[11px] font-medium text-[#737373] hover:text-[#0A0A0A] transition-colors"
+                  className="inline-flex items-center gap-1.5 text-[11px] font-medium text-[var(--fg-muted)] hover:text-[var(--fg)] transition-colors"
                 >
                   <ExternalLink className="w-3 h-3" />
                   Open in new tab to test
                 </a>
               </>
             ) : (
-              <p className="text-[11px] text-[#737373]">
+              <p className="text-[11px] text-[var(--fg-muted)]">
                 Save your chatbot configuration first to generate the public link.
               </p>
             )}
@@ -462,3 +462,6 @@ export function ChatbotSettingsView() {
     </div>
   );
 }
+
+
+

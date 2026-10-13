@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 
 interface StatItemProps {
   label: string;
@@ -10,18 +10,18 @@ interface StatItemProps {
 export function StatItem({ label, value, caption, isLast }: StatItemProps) {
   return (
     <div
-      className={`p-5 bg-white border-b md:border-b-0 ${
-        !isLast ? "md:border-r border-[#E5E5E5]" : ""
+      className={`p-5 bg-[var(--surface)] border-b md:border-b-0 ${
+        !isLast ? "md:border-r border-[var(--border)]" : ""
       }`}
     >
-      <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#737373] mb-2">
+      <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--fg-muted)] mb-2">
         {label}
       </p>
-      <div className="text-[28px] font-semibold text-[#0A0A0A] tabular-nums leading-none tracking-tight">
+      <div className="text-[28px] font-semibold text-[var(--fg)] tabular-nums leading-none tracking-tight">
         {value}
       </div>
       {caption && (
-        <p className="text-xs text-[#737373] mt-2 font-normal">
+        <p className="text-xs text-[var(--fg-muted)] mt-2 font-normal">
           {caption}
         </p>
       )}
@@ -39,7 +39,7 @@ interface StatRowProps {
 
 export function StatRow({ stats }: StatRowProps) {
   return (
-    <div className="border border-[#E5E5E5] bg-white grid grid-cols-1 md:grid-cols-4 mb-8">
+    <div className="border border-[var(--border)] bg-[var(--surface)] grid grid-cols-1 md:grid-cols-4 mb-8">
       {stats.map((stat, idx) => (
         <StatItem
           key={stat.label}
@@ -52,3 +52,4 @@ export function StatRow({ stats }: StatRowProps) {
     </div>
   );
 }
+

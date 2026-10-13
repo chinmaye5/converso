@@ -1,4 +1,4 @@
-import { AppShell } from "../../components/layout/AppShell";
+﻿import { AppShell } from "../../components/layout/AppShell";
 import { KnowledgeBaseView } from "../../components/documents/KnowledgeBaseView";
 
 export default function KnowledgeBasePage() {
@@ -8,3 +8,4 @@ export default function KnowledgeBasePage() {
     </AppShell>
   );
 }
+

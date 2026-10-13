@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect, type ReactNode } from "react";
 import { useAuth } from "@clerk/nextjs";
@@ -20,12 +20,9 @@ export function AppShell({ children }: { children: ReactNode }) {
     }
   }, [isLoaded, isSignedIn, router]);
 
-  // Keep sidebar links pointing at /dashboard for Overview
-
-
   if (!isLoaded || !isSignedIn) {
     return (
-      <div className="min-h-screen bg-[#FAFAFA] p-8 flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--bg)] p-8 flex items-center justify-center">
         <div className="w-full max-w-xl">
           <PageLoadingSkeleton />
         </div>
@@ -35,7 +32,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <WorkspaceProvider>
-      <div className="min-h-screen flex bg-[#FAFAFA] text-[#0A0A0A]">
+      <div className="min-h-screen flex bg-[var(--bg)] text-[var(--fg)]">
         {/* Desktop Sidebar */}
         <div className="hidden md:block fixed inset-y-0 left-0 z-30">
           <AppSidebar />
@@ -45,10 +42,10 @@ export function AppShell({ children }: { children: ReactNode }) {
         {mobileMenuOpen && (
           <div className="md:hidden fixed inset-0 z-50 flex">
             <div
-              className="fixed inset-0 bg-black/40"
+              className="fixed inset-0 bg-black/50"
               onClick={() => setMobileMenuOpen(false)}
             />
-            <div className="relative z-10 w-64 max-w-[80vw] h-full bg-white shadow-xl">
+            <div className="relative z-10 w-64 max-w-[80vw] h-full bg-[var(--surface)] shadow-xl">
               <AppSidebar onNavClick={() => setMobileMenuOpen(false)} />
             </div>
           </div>
@@ -72,3 +69,4 @@ export function AppShell({ children }: { children: ReactNode }) {
     </WorkspaceProvider>
   );
 }
+

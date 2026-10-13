@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import Link from "next/link";
@@ -43,33 +43,33 @@ export function AppSidebar({ onNavClick }: AppSidebarProps) {
   const { user } = useUser();
 
   return (
-    <aside className="w-60 h-full bg-white border-r border-[#E5E5E5] flex flex-col justify-between shrink-0 select-none">
+    <aside className="w-60 h-full bg-[var(--surface)] border-r border-[var(--border)] flex flex-col justify-between shrink-0 select-none">
       <div>
         {/* Brand header */}
-        <div className="h-14 px-5 border-b border-[#E5E5E5] flex items-center justify-between">
+        <div className="h-14 px-5 border-b border-[var(--border)] flex items-center justify-between">
           <Link
             href="/"
             onClick={onNavClick}
-            className="flex items-center gap-2 font-semibold text-sm tracking-tight text-[#0A0A0A]"
+            className="flex items-center gap-2 font-semibold text-sm tracking-tight text-[var(--fg)]"
           >
             <span className="w-2 h-2 bg-[#E30613] rounded-[0.5px]" />
             <span className="tracking-swiss uppercase text-xs font-bold">
               Converso
             </span>
           </Link>
-          <span className="text-[10px] uppercase font-mono tracking-wider text-[#737373] border border-[#E5E5E5] px-1 py-0.2 rounded-[1px]">
+          <span className="text-[10px] uppercase font-mono tracking-wider text-[var(--fg-muted)] border border-[var(--border)] px-1 rounded-[1px]">
             v1.0
           </span>
         </div>
 
         {/* Workspace selector */}
-        <div className="p-3 border-b border-[#E5E5E5] bg-[#FAFAFA]/50">
+        <div className="p-3 border-b border-[var(--border)] bg-[var(--bg-subtle)]">
           <WorkspaceSwitcher />
         </div>
 
         {/* Navigation links */}
         <nav className="py-2" aria-label="Main Navigation">
-          <p className="px-5 pt-3 pb-1.5 text-[10px] font-medium uppercase tracking-[0.08em] text-[#737373]">
+          <p className="px-5 pt-3 pb-1.5 text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--fg-muted)]">
             Navigation
           </p>
           <ul className="space-y-0.5">
@@ -84,8 +84,8 @@ export function AppSidebar({ onNavClick }: AppSidebarProps) {
                     onClick={onNavClick}
                     className={`relative flex items-center gap-3 px-5 py-2 text-xs transition-colors ${
                       isActive
-                        ? "text-[#0A0A0A] font-medium bg-[#FAFAFA]"
-                        : "text-[#737373] hover:text-[#0A0A0A] hover:bg-[#F5F5F5]"
+                        ? "text-[var(--fg)] font-medium bg-[var(--hover)]"
+                        : "text-[var(--fg-muted)] hover:text-[var(--fg)] hover:bg-[var(--hover)]"
                     }`}
                   >
                     {isActive && (
@@ -102,10 +102,10 @@ export function AppSidebar({ onNavClick }: AppSidebarProps) {
       </div>
 
       {/* Footer / Account */}
-      <div className="border-t border-[#E5E5E5] p-3">
-        <div className="flex items-center justify-between p-2 rounded-[1px] hover:bg-[#F5F5F5] transition-colors">
+      <div className="border-t border-[var(--border)] p-3">
+        <div className="flex items-center justify-between p-2 rounded-[1px] hover:bg-[var(--hover)] transition-colors">
           <div className="flex items-center gap-2.5 min-w-0 pr-2">
-            <div className="w-6 h-6 rounded-[1px] bg-[#0A0A0A] text-white flex items-center justify-center text-[10px] font-medium shrink-0">
+            <div className="w-6 h-6 rounded-[1px] bg-[var(--fg)] text-[var(--surface)] flex items-center justify-center text-[10px] font-medium shrink-0">
               {user?.firstName ? (
                 user.firstName.charAt(0).toUpperCase()
               ) : (
@@ -113,10 +113,10 @@ export function AppSidebar({ onNavClick }: AppSidebarProps) {
               )}
             </div>
             <div className="min-w-0">
-              <p className="text-xs font-medium text-[#0A0A0A] truncate leading-tight">
+              <p className="text-xs font-medium text-[var(--fg)] truncate leading-tight">
                 {user?.fullName || user?.primaryEmailAddress?.emailAddress || "User"}
               </p>
-              <p className="text-[10px] text-[#737373] truncate">
+              <p className="text-[10px] text-[var(--fg-muted)] truncate">
                 {user?.primaryEmailAddress?.emailAddress}
               </p>
             </div>
@@ -126,7 +126,7 @@ export function AppSidebar({ onNavClick }: AppSidebarProps) {
             onClick={() => signOut({ redirectUrl: "/login" })}
             title="Sign out"
             aria-label="Sign out"
-            className="p-1.5 text-[#737373] hover:text-[#E30613] hover:bg-white border border-transparent hover:border-[#E5E5E5] rounded-[1px] transition-colors"
+            className="p-1.5 text-[var(--fg-muted)] hover:text-[#E30613] hover:bg-[var(--surface)] border border-transparent hover:border-[var(--border)] rounded-[1px] transition-colors"
           >
             <LogOut className="w-3.5 h-3.5 stroke-[1.5]" />
           </button>
@@ -135,3 +135,5 @@ export function AppSidebar({ onNavClick }: AppSidebarProps) {
     </aside>
   );
 }
+
+

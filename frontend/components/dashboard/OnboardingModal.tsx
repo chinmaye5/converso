@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import { useWorkspace } from "../../lib/workspace-context";
@@ -38,14 +38,14 @@ export function OnboardingModal() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-none">
-      <div className="bg-white border border-[#E5E5E5] max-w-md w-full p-8 shadow-sm rounded-[1px]">
+      <div className="bg-[var(--surface)] border border-[var(--border)] max-w-md w-full p-8 shadow-sm rounded-[1px]">
         <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#E30613] mb-1.5">
           Workspace Onboarding
         </p>
-        <h2 className="text-xl font-semibold text-[#0A0A0A] tracking-tight mb-2">
+        <h2 className="text-xl font-semibold text-[var(--fg)] tracking-tight mb-2">
           Create your first workspace
         </h2>
-        <p className="text-sm text-[#737373] mb-6 leading-relaxed">
+        <p className="text-sm text-[var(--fg-muted)] mb-6 leading-relaxed">
           Workspaces organize your knowledge documents, AI chatbot settings,
           and customer support tickets.
         </p>
@@ -54,7 +54,7 @@ export function OnboardingModal() {
           <div>
             <label
               htmlFor="workspace-name"
-              className="block text-xs font-medium uppercase tracking-[0.05em] text-[#0A0A0A] mb-1.5"
+              className="block text-xs font-medium uppercase tracking-[0.05em] text-[var(--fg)] mb-1.5"
             >
               Workspace Name
             </label>
@@ -70,7 +70,7 @@ export function OnboardingModal() {
               maxLength={100}
               required
               disabled={submitting}
-              className="w-full px-3 py-2 text-sm bg-white border border-[#E5E5E5] text-[#0A0A0A] placeholder-[#A3A3A3] focus:outline-none focus:ring-1 focus:ring-[#E30613] focus:border-[#E30613] rounded-[1px]"
+              className="w-full px-3 py-2 text-sm bg-[var(--surface)] border border-[var(--border)] text-[var(--fg)] placeholder-[var(--fg-faint)] focus:outline-none focus:ring-1 focus:ring-[#E30613] focus:border-[#E30613] rounded-[1px]"
             />
             {error && (
               <p className="text-xs text-[#E30613] mt-1.5 font-medium">
@@ -83,7 +83,7 @@ export function OnboardingModal() {
             <button
               type="submit"
               disabled={submitting || !name.trim()}
-              className="w-full py-2.5 px-4 text-xs font-medium uppercase tracking-[0.06em] bg-[#0A0A0A] hover:bg-[#262626] text-white transition-colors rounded-[1px] disabled:opacity-50"
+              className="w-full py-2.5 px-4 text-xs font-medium uppercase tracking-[0.06em] btn-primary transition-colors rounded-[1px] disabled:opacity-50"
             >
               {submitting ? "Creating Workspace..." : "Create Workspace"}
             </button>
@@ -93,3 +93,6 @@ export function OnboardingModal() {
     </div>
   );
 }
+
+
+

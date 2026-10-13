@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
@@ -148,11 +148,11 @@ export function WorkspaceSettingsView() {
       )}
 
       {/* Section 1: Workspace Identity & Rename */}
-      <div className="bg-white border border-[#E5E5E5] p-6 md:p-8">
-        <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#737373] mb-1">
+      <div className="bg-[var(--surface)] border border-[var(--border)] p-6 md:p-8">
+        <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--fg-muted)] mb-1">
           Identity
         </p>
-        <h2 className="text-base font-semibold text-[#0A0A0A] mb-4">
+        <h2 className="text-base font-semibold text-[var(--fg)] mb-4">
           Workspace Details
         </h2>
 
@@ -160,7 +160,7 @@ export function WorkspaceSettingsView() {
           <div>
             <label
               htmlFor="ws-name"
-              className="block text-xs font-medium uppercase tracking-[0.05em] text-[#0A0A0A] mb-1.5"
+              className="block text-xs font-medium uppercase tracking-[0.05em] text-[var(--fg)] mb-1.5"
             >
               Workspace Name
             </label>
@@ -171,7 +171,7 @@ export function WorkspaceSettingsView() {
               onChange={(e) => setName(e.target.value)}
               maxLength={100}
               required
-              className="w-full px-3 py-2 text-xs bg-white border border-[#E5E5E5] text-[#0A0A0A] rounded-[1px] focus:outline-none focus:ring-1 focus:ring-[#E30613]"
+              className="w-full px-3 py-2 text-xs bg-[var(--surface)] border border-[var(--border)] text-[var(--fg)] rounded-[1px] focus:outline-none focus:ring-1 focus:ring-[#E30613]"
             />
           </div>
 
@@ -179,27 +179,27 @@ export function WorkspaceSettingsView() {
             <button
               type="submit"
               disabled={saving || name.trim() === currentWorkspace.name}
-              className="px-4 py-2 text-xs font-medium uppercase tracking-[0.05em] bg-[#0A0A0A] hover:bg-[#262626] text-white rounded-[1px] transition-colors disabled:opacity-40"
+              className="px-4 py-2 text-xs font-medium uppercase tracking-[0.05em] btn-primary rounded-[1px] transition-colors disabled:opacity-40"
             >
               {saving ? "Updating..." : "Update Name"}
             </button>
           </div>
         </form>
 
-        <div className="mt-6 pt-6 border-t border-[#E5E5E5] grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono text-[#737373]">
+        <div className="mt-6 pt-6 border-t border-[var(--border)] grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono text-[var(--fg-muted)]">
           <div>
-            <p className="text-[10px] uppercase font-sans text-[#737373]">
+            <p className="text-[10px] uppercase font-sans text-[var(--fg-muted)]">
               Workspace ID
             </p>
-            <p className="text-[#0A0A0A] mt-0.5 select-all">
+            <p className="text-[var(--fg)] mt-0.5 select-all">
               {currentWorkspace.id}
             </p>
           </div>
           <div>
-            <p className="text-[10px] uppercase font-sans text-[#737373]">
+            <p className="text-[10px] uppercase font-sans text-[var(--fg-muted)]">
               Created Timestamp
             </p>
-            <p className="text-[#0A0A0A] mt-0.5">
+            <p className="text-[var(--fg)] mt-0.5">
               {new Date(currentWorkspace.createdAt).toLocaleString()}
             </p>
           </div>
@@ -207,13 +207,13 @@ export function WorkspaceSettingsView() {
       </div>
 
       {/* Section 2: Account Profile */}
-      <div className="bg-white border border-[#E5E5E5] p-6 md:p-8">
+      <div className="bg-[var(--surface)] border border-[var(--border)] p-6 md:p-8">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#737373] mb-1">
+            <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--fg-muted)] mb-1">
               Account
             </p>
-            <h2 className="text-base font-semibold text-[#0A0A0A]">
+            <h2 className="text-base font-semibold text-[var(--fg)]">
               User Profile
             </h2>
           </div>
@@ -227,15 +227,15 @@ export function WorkspaceSettingsView() {
           </button>
         </div>
 
-        <div className="p-4 bg-[#FAFAFA] border border-[#E5E5E5] rounded-[1px] flex items-center gap-3">
-          <div className="w-9 h-9 rounded-[1px] bg-[#0A0A0A] text-white flex items-center justify-center font-medium text-xs">
+        <div className="p-4 bg-[var(--bg-subtle)] border border-[var(--border)] rounded-[1px] flex items-center gap-3">
+          <div className="w-9 h-9 rounded-[1px] bg-[var(--fg)] text-[var(--btn-text)] flex items-center justify-center font-medium text-xs">
             <User className="w-4 h-4" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-[#0A0A0A]">
+            <p className="text-xs font-semibold text-[var(--fg)]">
               {profile?.name || "Authenticated Operator"}
             </p>
-            <p className="text-[11px] text-[#737373] font-mono">
+            <p className="text-[11px] text-[var(--fg-muted)] font-mono">
               {profile?.email || "Managed through Clerk SSO"}
             </p>
           </div>
@@ -243,21 +243,21 @@ export function WorkspaceSettingsView() {
       </div>
 
       {/* Section 3: Chatbot Shortcut */}
-      <div className="bg-white border border-[#E5E5E5] p-6 md:p-8 flex items-center justify-between">
+      <div className="bg-[var(--surface)] border border-[var(--border)] p-6 md:p-8 flex items-center justify-between">
         <div>
-          <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#737373] mb-1">
+          <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--fg-muted)] mb-1">
             Assistant Integration
           </p>
-          <h3 className="text-sm font-semibold text-[#0A0A0A]">
+          <h3 className="text-sm font-semibold text-[var(--fg)]">
             Chatbot Instructions & Brand Accent
           </h3>
-          <p className="text-xs text-[#737373] mt-1">
+          <p className="text-xs text-[var(--fg-muted)] mt-1">
             Configure system prompts, assistant name, and primary brand colors.
           </p>
         </div>
         <Link
           href="/chatbot"
-          className="px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.05em] bg-white border border-[#E5E5E5] hover:border-[#0A0A0A] text-[#0A0A0A] rounded-[1px] inline-flex items-center gap-1.5 transition-colors shrink-0"
+          className="px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.05em] bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--fg)] text-[var(--fg)] rounded-[1px] inline-flex items-center gap-1.5 transition-colors shrink-0"
         >
           <Bot className="w-3.5 h-3.5 text-[#E30613]" />
           <span>Configure Bot</span>
@@ -265,14 +265,14 @@ export function WorkspaceSettingsView() {
       </div>
 
       {/* Section 4: Danger Zone */}
-      <div className="bg-white border border-[#E30613]/30 p-6 md:p-8">
+      <div className="bg-[var(--surface)] border border-[#E30613]/30 p-6 md:p-8">
         <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#E30613] mb-1">
           Danger Zone
         </p>
-        <h2 className="text-base font-semibold text-[#0A0A0A] mb-1">
+        <h2 className="text-base font-semibold text-[var(--fg)] mb-1">
           Delete Workspace
         </h2>
-        <p className="text-xs text-[#737373] mb-4 max-w-xl leading-relaxed">
+        <p className="text-xs text-[var(--fg-muted)] mb-4 max-w-xl leading-relaxed">
           Permanently delete this workspace along with its chatbot, document
           chunks, embeddings, and support tickets. This action cannot be
           reversed.
@@ -301,3 +301,6 @@ export function WorkspaceSettingsView() {
     </div>
   );
 }
+
+
+

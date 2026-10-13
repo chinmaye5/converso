@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useCallback } from "react";
 import { useAuth } from "@clerk/nextjs";
@@ -157,11 +157,11 @@ export function KnowledgeBaseView() {
       />
 
       {/* Upload Zone */}
-      <div className="bg-white border border-[#E5E5E5] p-6 md:p-8">
-        <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#737373] mb-1.5">
+      <div className="bg-[var(--surface)] border border-[var(--border)] p-6 md:p-8">
+        <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--fg-muted)] mb-1.5">
           Ingestion Pipeline
         </p>
-        <h2 className="text-base font-semibold text-[#0A0A0A] mb-4">
+        <h2 className="text-base font-semibold text-[var(--fg)] mb-4">
           Upload Knowledge Document
         </h2>
 
@@ -199,15 +199,15 @@ export function KnowledgeBaseView() {
             className={`border border-dashed p-8 text-center transition-colors rounded-[1px] ${
               isDragging
                 ? "border-[#E30613] bg-[#E30613]/5"
-                : "border-[#D4D4D4] hover:border-[#0A0A0A] bg-[#FAFAFA]"
+                : "border-[#D4D4D4] hover:border-[var(--fg)] bg-[var(--bg-subtle)]"
             }`}
           >
-            <UploadCloud className="w-8 h-8 text-[#737373] mx-auto mb-3 stroke-[1.5]" />
-            <p className="text-xs font-medium text-[#0A0A0A] mb-1">
+            <UploadCloud className="w-8 h-8 text-[var(--fg-muted)] mx-auto mb-3 stroke-[1.5]" />
+            <p className="text-xs font-medium text-[var(--fg)] mb-1">
               Drag and drop your PDF here, or browse files
             </p>
-            <p className="text-[11px] text-[#737373] mb-4">
-              Supported format: PDF only • Maximum file size: 10 MB
+            <p className="text-[11px] text-[var(--fg-muted)] mb-4">
+              Supported format: PDF only â€¢ Maximum file size: 10 MB
             </p>
 
             <label className="inline-block">
@@ -221,7 +221,7 @@ export function KnowledgeBaseView() {
                 }}
                 className="sr-only"
               />
-              <span className="px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.05em] bg-white border border-[#E5E5E5] text-[#0A0A0A] hover:bg-[#F5F5F5] cursor-pointer transition-colors rounded-[1px]">
+              <span className="px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.05em] bg-[var(--surface)] border border-[var(--border)] text-[var(--fg)] hover:bg-[var(--hover)] cursor-pointer transition-colors rounded-[1px]">
                 Choose PDF File
               </span>
             </label>
@@ -229,14 +229,14 @@ export function KnowledgeBaseView() {
 
           {/* Selected File Details & Upload Action */}
           {selectedFile && (
-            <div className="p-4 bg-white border border-[#E5E5E5] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="p-4 bg-[var(--surface)] border border-[var(--border)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3 min-w-0">
                 <FileText className="w-5 h-5 text-[#E30613] shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-xs font-medium text-[#0A0A0A] truncate">
+                  <p className="text-xs font-medium text-[var(--fg)] truncate">
                     {selectedFile.name}
                   </p>
-                  <p className="text-[11px] text-[#737373] font-mono tabular-nums">
+                  <p className="text-[11px] text-[var(--fg-muted)] font-mono tabular-nums">
                     {formatBytes(selectedFile.size)}
                   </p>
                 </div>
@@ -247,14 +247,14 @@ export function KnowledgeBaseView() {
                   type="button"
                   onClick={() => setSelectedFile(null)}
                   disabled={uploading}
-                  className="px-3 py-1.5 text-xs font-medium uppercase tracking-[0.04em] text-[#737373] hover:text-[#0A0A0A] transition-colors"
+                  className="px-3 py-1.5 text-xs font-medium uppercase tracking-[0.04em] text-[var(--fg-muted)] hover:text-[var(--fg)] transition-colors"
                 >
                   Clear
                 </button>
                 <button
                   type="submit"
                   disabled={uploading}
-                  className="px-4 py-1.5 text-xs font-medium uppercase tracking-[0.05em] bg-[#0A0A0A] hover:bg-[#262626] text-white transition-colors rounded-[1px] disabled:opacity-50"
+                  className="px-4 py-1.5 text-xs font-medium uppercase tracking-[0.05em] btn-primary transition-colors rounded-[1px] disabled:opacity-50"
                 >
                   {uploading ? "Extracting & Embedding..." : "Upload & Ingest"}
                 </button>
@@ -265,7 +265,7 @@ export function KnowledgeBaseView() {
           {/* Upload Progress Bar */}
           {uploading && (
             <div className="space-y-1.5">
-              <div className="flex justify-between text-[11px] text-[#737373] font-mono">
+              <div className="flex justify-between text-[11px] text-[var(--fg-muted)] font-mono">
                 <span>Uploading to private storage & extracting text...</span>
                 <span>{uploadProgress}%</span>
               </div>
@@ -281,35 +281,35 @@ export function KnowledgeBaseView() {
       </div>
 
       {/* Uploaded Documents Table */}
-      <div className="bg-white border border-[#E5E5E5] p-6 md:p-8">
+      <div className="bg-[var(--surface)] border border-[var(--border)] p-6 md:p-8">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#737373] mb-0.5">
+            <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--fg-muted)] mb-0.5">
               Indexed Documents
             </p>
-            <h2 className="text-base font-semibold text-[#0A0A0A]">
+            <h2 className="text-base font-semibold text-[var(--fg)]">
               Workspace Document Records
             </h2>
           </div>
-          <span className="text-xs font-mono text-[#737373]">
+          <span className="text-xs font-mono text-[var(--fg-muted)]">
             {sessionDocuments.length} document{sessionDocuments.length === 1 ? "" : "s"} indexed
           </span>
         </div>
 
         {sessionDocuments.length === 0 ? (
-          <div className="border border-dashed border-[#E5E5E5] p-6 text-left">
-            <p className="text-xs font-medium text-[#0A0A0A] mb-1">
+          <div className="border border-dashed border-[var(--border)] p-6 text-left">
+            <p className="text-xs font-medium text-[var(--fg)] mb-1">
               No documents uploaded in this session
             </p>
-            <p className="text-xs text-[#737373] leading-relaxed">
+            <p className="text-xs text-[var(--fg-muted)] leading-relaxed">
               Upload PDF files above to split text into passage chunks and generate 1024-dimension vector embeddings.
             </p>
           </div>
         ) : (
-          <div className="border border-[#E5E5E5] overflow-x-auto">
+          <div className="border border-[var(--border)] overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-[#E5E5E5] bg-[#FAFAFA] text-[#737373]">
+                <tr className="border-b border-[var(--border)] bg-[var(--bg-subtle)] text-[var(--fg-muted)]">
                   <th className="py-2.5 px-4 font-medium uppercase tracking-[0.06em] text-[10px]">
                     Filename
                   </th>
@@ -324,20 +324,20 @@ export function KnowledgeBaseView() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E5E5E5]">
+              <tbody className="divide-y divide-[var(--border)]">
                 {sessionDocuments.map((doc) => (
-                  <tr key={doc.id} className="hover:bg-[#F5F5F5] transition-colors">
-                    <td className="py-3 px-4 font-medium text-[#0A0A0A] flex items-center gap-2">
-                      <FileText className="w-3.5 h-3.5 text-[#737373] shrink-0" />
+                  <tr key={doc.id} className="hover:bg-[var(--hover)] transition-colors">
+                    <td className="py-3 px-4 font-medium text-[var(--fg)] flex items-center gap-2">
+                      <FileText className="w-3.5 h-3.5 text-[var(--fg-muted)] shrink-0" />
                       <span className="truncate max-w-xs">{doc.filename}</span>
                     </td>
-                    <td className="py-3 px-4 text-[#737373] font-mono tabular-nums">
+                    <td className="py-3 px-4 text-[var(--fg-muted)] font-mono tabular-nums">
                       {formatBytes(doc.sizeBytes)}
                     </td>
                     <td className="py-3 px-4">
                       <StatusBadge status={doc.status} />
                     </td>
-                    <td className="py-3 px-4 text-right text-[#737373] font-mono text-[11px] tabular-nums">
+                    <td className="py-3 px-4 text-right text-[var(--fg-muted)] font-mono text-[11px] tabular-nums">
                       {new Date(doc.createdAt).toLocaleDateString()}
                     </td>
                   </tr>
@@ -349,21 +349,21 @@ export function KnowledgeBaseView() {
       </div>
 
       {/* Semantic Vector Search Playground */}
-      <div className="bg-white border border-[#E5E5E5] p-6 md:p-8">
+      <div className="bg-[var(--surface)] border border-[var(--border)] p-6 md:p-8">
         <div className="flex items-center justify-between mb-2">
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#737373] mb-0.5">
+            <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--fg-muted)] mb-0.5">
               Vector Retrieval Inspection
             </p>
-            <h2 className="text-base font-semibold text-[#0A0A0A]">
+            <h2 className="text-base font-semibold text-[var(--fg)]">
               Test Knowledge Search
             </h2>
           </div>
-          <span className="text-[11px] font-mono text-[#737373] uppercase border border-[#E5E5E5] px-1.5 py-0.5">
+          <span className="text-[11px] font-mono text-[var(--fg-muted)] uppercase border border-[var(--border)] px-1.5 py-0.5">
             pgvector (1024d)
           </span>
         </div>
-        <p className="text-xs text-[#737373] mb-4 max-w-xl leading-relaxed">
+        <p className="text-xs text-[var(--fg-muted)] mb-4 max-w-xl leading-relaxed">
           Submit questions to verify similarity search against uploaded document chunks.
         </p>
 
@@ -379,7 +379,7 @@ export function KnowledgeBaseView() {
 
         <form onSubmit={handleSearch} className="flex gap-2 mb-6">
           <div className="relative flex-1">
-            <Search className="w-4 h-4 text-[#737373] absolute left-3 top-2.5" />
+            <Search className="w-4 h-4 text-[var(--fg-muted)] absolute left-3 top-2.5" />
             <input
               type="text"
               value={searchQuery}
@@ -387,13 +387,13 @@ export function KnowledgeBaseView() {
               placeholder="e.g. What is the return refund policy?"
               required
               disabled={isSearching}
-              className="w-full pl-9 pr-3 py-2 text-xs bg-white border border-[#E5E5E5] text-[#0A0A0A] placeholder-[#A3A3A3] focus:outline-none focus:ring-1 focus:ring-[#E30613] rounded-[1px]"
+              className="w-full pl-9 pr-3 py-2 text-xs bg-[var(--surface)] border border-[var(--border)] text-[var(--fg)] placeholder-[var(--fg-faint)] focus:outline-none focus:ring-1 focus:ring-[#E30613] rounded-[1px]"
             />
           </div>
           <button
             type="submit"
             disabled={isSearching || !searchQuery.trim()}
-            className="px-4 py-2 text-xs font-medium uppercase tracking-[0.05em] bg-[#0A0A0A] hover:bg-[#262626] text-white transition-colors rounded-[1px] disabled:opacity-50 shrink-0"
+            className="px-4 py-2 text-xs font-medium uppercase tracking-[0.05em] btn-primary transition-colors rounded-[1px] disabled:opacity-50 shrink-0"
           >
             {isSearching ? "Searching..." : "Query Chunks"}
           </button>
@@ -401,24 +401,24 @@ export function KnowledgeBaseView() {
 
         {searchResults && (
           <div className="space-y-3">
-            <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#737373]">
+            <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--fg-muted)]">
               Retrieved Chunks ({searchResults.length})
             </p>
 
             {searchResults.length === 0 ? (
-              <div className="border border-[#E5E5E5] p-4 text-xs text-[#737373]">
+              <div className="border border-[var(--border)] p-4 text-xs text-[var(--fg-muted)]">
                 No document chunks matched this query. Upload documents or try different keywords.
               </div>
             ) : (
-              <div className="border border-[#E5E5E5] divide-y divide-[#E5E5E5]">
+              <div className="border border-[var(--border)] divide-y divide-[var(--border)]">
                 {searchResults.map((result, idx) => (
-                  <div key={result.chunk_id || idx} className="p-4 bg-white text-xs">
+                  <div key={result.chunk_id || idx} className="p-4 bg-[var(--surface)] text-xs">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <span className="w-4 h-4 rounded-[1px] bg-[#0A0A0A] text-white flex items-center justify-center text-[10px] font-mono">
+                        <span className="w-4 h-4 rounded-[1px] bg-[var(--fg)] text-[var(--btn-text)] flex items-center justify-center text-[10px] font-mono">
                           {idx + 1}
                         </span>
-                        <span className="font-semibold text-[#0A0A0A]">
+                        <span className="font-semibold text-[var(--fg)]">
                           {result.filename}
                         </span>
                       </div>
@@ -426,7 +426,7 @@ export function KnowledgeBaseView() {
                         Similarity: {(result.similarity * 100).toFixed(1)}%
                       </span>
                     </div>
-                    <p className="text-[#0A0A0A] font-mono text-[11px] bg-[#FAFAFA] p-3 border border-[#E5E5E5] rounded-[1px] whitespace-pre-wrap leading-relaxed">
+                    <p className="text-[var(--fg)] font-mono text-[11px] bg-[var(--bg-subtle)] p-3 border border-[var(--border)] rounded-[1px] whitespace-pre-wrap leading-relaxed">
                       {result.content}
                     </p>
                   </div>
@@ -439,3 +439,6 @@ export function KnowledgeBaseView() {
     </div>
   );
 }
+
+
+

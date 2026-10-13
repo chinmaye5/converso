@@ -1,4 +1,4 @@
-import { AppShell } from "../../components/layout/AppShell";
+﻿import { AppShell } from "../../components/layout/AppShell";
 import { PlaygroundChatView } from "../../components/playground/PlaygroundChatView";
 
 export default function PlaygroundPage() {
@@ -8,3 +8,4 @@ export default function PlaygroundPage() {
     </AppShell>
   );
 }
+

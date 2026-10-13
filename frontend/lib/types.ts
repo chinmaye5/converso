@@ -1,4 +1,4 @@
-export interface Conversation {
+﻿export interface Conversation {
   id: string;
   title: string;
   createdAt: string;
@@ -91,3 +91,4 @@ export interface UserProfile {
   name: string;
   email: string;
 }
+
