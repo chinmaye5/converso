@@ -6,6 +6,7 @@ import { db } from "../db";
 import {
     workspaces,
     conversations,
+    messages,
     supportTickets,
 } from "../db/schema";
 
@@ -234,5 +235,85 @@ export async function updateTicketStatus(req: Request, res: Response) {
     } catch (error) {
         console.error("Update ticket status error:", error);
         return res.status(500).json({ message: "Failed to update ticket" });
+    }
+}
+
+export async function getTicketWithConversation(req: Request, res: Response) {
+    try {
+        const { userId } = getAuth(req);
+
+        if (!userId) {
+            return res.status(401).json({ message: "Please log in first" });
+        }
+
+        const workspaceId = getParam(req.params.workspaceId);
+        const ticketId = getParam(req.params.ticketId);
+
+        if (!workspaceId || !ticketId) {
+            return res.status(400).json({
+                message: "Workspace ID and ticket ID are required",
+            });
+        }
+
+        const [workspace] = await db
+            .select({ id: workspaces.id })
+            .from(workspaces)
+            .where(
+                and(
+                    eq(workspaces.id, workspaceId),
+                    eq(workspaces.ownerId, userId),
+                ),
+            )
+            .limit(1);
+
+        if (!workspace) {
+            return res.status(404).json({ message: "Workspace not found" });
+        }
+
+        const [ticket] = await db
+            .select()
+            .from(supportTickets)
+            .where(
+                and(
+                    eq(supportTickets.id, ticketId),
+                    eq(supportTickets.workspaceId, workspaceId),
+                ),
+            )
+            .limit(1);
+
+        if (!ticket) {
+            return res.status(404).json({ message: "Ticket not found" });
+        }
+
+        let conversationData = null;
+        if (ticket.conversationId) {
+            const [conversation] = await db
+                .select()
+                .from(conversations)
+                .where(eq(conversations.id, ticket.conversationId))
+                .limit(1);
+
+            if (conversation) {
+                const conversationMessages = await db
+                    .select()
+                    .from(messages)
+                    .where(eq(messages.conversationId, conversation.id))
+                    .orderBy(messages.createdAt);
+
+                conversationData = {
+                    conversation,
+                    messages: conversationMessages,
+                };
+            }
+        }
+
+        return res.json({
+            ticket,
+            conversation: conversationData?.conversation || null,
+            messages: conversationData?.messages || [],
+        });
+    } catch (error) {
+        console.error("Get ticket with conversation error:", error);
+        return res.status(500).json({ message: "Failed to fetch ticket details" });
     }
 }

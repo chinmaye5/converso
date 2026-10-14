@@ -7,6 +7,7 @@ import type {
   DocumentItem,
   SearchResultChunk,
   SupportTicket,
+  TicketDetail,
   TicketStatus,
   UserProfile,
   Workspace,
@@ -271,6 +272,22 @@ export async function updateTicketStatus(
       { headers: authHeaders(token) },
     );
     return res.data.ticket;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function getTicketWithConversation(
+  token: string,
+  workspaceId: string,
+  ticketId: string,
+): Promise<TicketDetail> {
+  try {
+    const res = await axios.get<TicketDetail>(
+      `${API_BASE}/api/workspaces/${workspaceId}/tickets/${ticketId}`,
+      { headers: authHeaders(token) },
+    );
+    return res.data;
   } catch (error) {
     return handleApiError(error);
   }

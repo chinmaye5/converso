@@ -5,10 +5,17 @@
   updatedAt: string;
 }
 
+export interface ChatSource {
+  filename: string;
+  content: string;
+  similarity: number;
+}
+
 export interface ConversationMessage {
   id: string;
   role: "user" | "assistant";
   content: string;
+  sources?: ChatSource[];
   createdAt: string;
 }
 
@@ -59,15 +66,15 @@ export interface SupportTicket {
   updatedAt: string;
 }
 
+export interface TicketDetail {
+  ticket: SupportTicket;
+  conversation: Conversation | null;
+  messages: ConversationMessage[];
+}
+
 export interface SearchResultChunk {
   chunk_id: string;
   document_id: string;
-  filename: string;
-  content: string;
-  similarity: number;
-}
-
-export interface ChatSource {
   filename: string;
   content: string;
   similarity: number;

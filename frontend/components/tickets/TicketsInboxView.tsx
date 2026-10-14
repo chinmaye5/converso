@@ -4,8 +4,8 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { useWorkspace } from "../../lib/workspace-context";
-import { getTickets, updateTicketStatus } from "../../lib/api";
-import type { SupportTicket, TicketStatus } from "../../lib/types";
+import { getTickets, updateTicketStatus, getTicketWithConversation } from "../../lib/api";
+import type { SupportTicket, TicketStatus, ConversationMessage } from "../../lib/types";
 import { PageHeader } from "../ui/PageHeader";
 import { StatRow } from "../ui/StatCard";
 import { StatusBadge } from "../ui/StatusBadge";
@@ -20,6 +20,11 @@ import {
   User,
   CheckCircle,
   X,
+  Bot,
+  MessageSquare,
+  ChevronDown,
+  ChevronUp,
+  FileText,
 } from "lucide-react";
 
 export function TicketsInboxView() {
@@ -36,6 +41,9 @@ export function TicketsInboxView() {
 
   const [selectedTicket, setSelectedTicket] =
     useState<SupportTicket | null>(null);
+  const [ticketMessages, setTicketMessages] = useState<ConversationMessage[]>([]);
+  const [loadingMessages, setLoadingMessages] = useState(false);
+  const [expandedSources, setExpandedSources] = useState<Record<number, boolean>>({});
   const [updatingStatus, setUpdatingStatus] = useState(false);
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
 
@@ -63,6 +71,30 @@ export function TicketsInboxView() {
       );
     } finally {
       setLoading(false);
+    }
+  }, [currentWorkspace, getToken]);
+
+  const fetchTicketMessages = useCallback(async (ticketId: string) => {
+    if (!currentWorkspace) return;
+
+    try {
+      setLoadingMessages(true);
+      setTicketMessages([]);
+
+      const token = await getToken();
+      if (!token) return;
+
+      const data = await getTicketWithConversation(token, currentWorkspace.id, ticketId);
+      setTicketMessages(data.messages);
+    } catch (err) {
+      console.error("Failed to fetch ticket messages:", err);
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to load conversation messages"
+      );
+    } finally {
+      setLoadingMessages(false);
     }
   }, [currentWorkspace, getToken]);
 
@@ -338,7 +370,14 @@ export function TicketsInboxView() {
                   {filteredTickets.map((ticket) => (
                     <tr
                       key={ticket.id}
-                      onClick={() => setSelectedTicket(ticket)}
+                      onClick={() => {
+                        setSelectedTicket(ticket);
+                        if (ticket.conversationId) {
+                          fetchTicketMessages(ticket.id);
+                        } else {
+                          setTicketMessages([]);
+                        }
+                      }}
                       className={`cursor-pointer transition-colors ${selectedTicket?.id === ticket.id
                           ? "bg-[var(--bg-subtle)] font-medium"
                           : "hover:bg-[var(--hover)]"
@@ -463,6 +502,82 @@ export function TicketsInboxView() {
                 {selectedTicket.description}
               </div>
             </div>
+
+            {selectedTicket.conversationId && (
+              <div>
+                <p className="text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--fg-muted)] mb-2 flex items-center gap-1.5">
+                  <MessageSquare className="w-3 h-3" />
+                  Conversation History
+                </p>
+                {loadingMessages ? (
+                  <div className="p-4 bg-[var(--bg-subtle)] border border-[var(--border)] text-xs text-[var(--fg-muted)] flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-[#E30613] rounded-full animate-ping" />
+                    <span>Loading conversation...</span>
+                  </div>
+                ) : ticketMessages.length === 0 ? (
+                  <div className="p-4 bg-[var(--bg-subtle)] border border-[var(--border)] text-xs text-[var(--fg-muted)]">
+                    No messages found in this conversation.
+                  </div>
+                ) : (
+                  <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
+                    {ticketMessages.map((msg, idx) => {
+                      const isUser = msg.role === "user";
+                      const isExpanded = Boolean(expandedSources[idx]);
+                      return (
+                        <div
+                          key={msg.id}
+                          className={`flex flex-col ${isUser ? "items-end" : "items-start"}`}
+                        >
+                          <span className="text-[10px] font-mono text-[var(--fg-muted)] uppercase tracking-wider mb-1">
+                            {isUser ? "Customer" : "AI Assistant"}
+                          </span>
+                          <div
+                            className={`max-w-[100%] p-3 text-xs leading-relaxed border rounded-[1px] ${
+                              isUser
+                                ? "bg-[var(--bg-subtle)] border-[var(--border)] text-[var(--fg)] font-mono"
+                                : "bg-[var(--surface)] border-[var(--border)] text-[var(--fg)]"
+                            }`}
+                          >
+                            <div className="whitespace-pre-wrap">{msg.content}</div>
+
+                            {msg.sources && msg.sources.length > 0 && (
+                              <div className="mt-2">
+                                <button
+                                  type="button"
+                                  onClick={() => setExpandedSources((prev) => ({ ...prev, [idx]: !prev[idx] }))}
+                                  className="text-[11px] text-[var(--fg-muted)] hover:text-[var(--fg)] inline-flex items-center gap-1.5 transition-colors"
+                                >
+                                  <FileText className="w-3 h-3 text-[#E30613]" />
+                                  <span>{msg.sources.length} source{msg.sources.length !== 1 ? "s" : ""} cited</span>
+                                  {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                                </button>
+                                {isExpanded && (
+                                  <div className="mt-1.5 border border-[var(--border)] bg-[var(--bg-subtle)] divide-y divide-[var(--border)] text-[11px]">
+                                    {msg.sources.map((src, si) => (
+                                      <div key={si} className="p-2.5 space-y-1">
+                                        <div className="flex items-center justify-between text-[var(--fg)] font-medium">
+                                          <span className="truncate">[{si + 1}] {src.filename}</span>
+                                          <span className="font-mono text-[10px] text-[#16A34A] tabular-nums shrink-0 ml-2">
+                                            {(src.similarity * 100).toFixed(1)}%
+                                          </span>
+                                        </div>
+                                        <p className="text-[var(--fg-muted)] font-mono whitespace-pre-wrap line-clamp-3 bg-[var(--surface)] p-2 border border-[var(--border)]">
+                                          {src.content}
+                                        </p>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
 
             <div className="pt-2 border-t border-[var(--border)] space-y-1.5 text-[11px] text-[var(--fg-muted)] font-mono">
               <div className="flex justify-between">
