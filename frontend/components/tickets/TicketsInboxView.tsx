@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useEffect, useState, useCallback, useMemo } from "react";
@@ -17,10 +18,7 @@ import {
   Mail,
   Phone,
   User,
-  MessageSquare,
   CheckCircle,
-  Clock,
-  AlertCircle,
   X,
 } from "lucide-react";
 
@@ -32,12 +30,12 @@ export function TicketsInboxView() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Filters
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"all" | TicketStatus>("all");
+  const [statusFilter, setStatusFilter] =
+    useState<"all" | TicketStatus>("all");
 
-  // Selected ticket for side drawer
-  const [selectedTicket, setSelectedTicket] = useState<SupportTicket | null>(null);
+  const [selectedTicket, setSelectedTicket] =
+    useState<SupportTicket | null>(null);
   const [updatingStatus, setUpdatingStatus] = useState(false);
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
 
@@ -50,92 +48,133 @@ export function TicketsInboxView() {
     try {
       setLoading(true);
       setError(null);
+
       const token = await getToken();
       if (!token) return;
 
       const data = await getTickets(token, currentWorkspace.id);
       setTickets(data);
-
-      // Keep selected ticket in sync if open
-      if (selectedTicket) {
-        const updated = data.find((t) => t.id === selectedTicket.id);
-        if (updated) setSelectedTicket(updated);
-      }
     } catch (err) {
       console.error("Failed to fetch tickets:", err);
       setError(
-        err instanceof Error ? err.message : "Failed to load support tickets",
+        err instanceof Error
+          ? err.message
+          : "Failed to load support tickets"
       );
     } finally {
       setLoading(false);
     }
-  }, [currentWorkspace, getToken, selectedTicket]);
+  }, [currentWorkspace, getToken]);
 
   useEffect(() => {
     fetchTickets();
   }, [fetchTickets]);
 
-  async function handleStatusChange(ticketId: string, newStatus: TicketStatus) {
-    if (!currentWorkspace) return;
+  // Synchronize the selected ticket with fetched data.
+  // This effect does not trigger another fetch.
+  useEffect(() => {
+    if (!selectedTicket) return;
+
+    const updated = tickets.find(
+      (ticket) => ticket.id === selectedTicket.id
+    );
+
+    if (
+      updated &&
+      (updated.status !== selectedTicket.status ||
+        updated.subject !== selectedTicket.subject ||
+        updated.description !== selectedTicket.description ||
+        updated.customerName !== selectedTicket.customerName ||
+        updated.customerEmail !== selectedTicket.customerEmail ||
+        updated.customerPhone !== selectedTicket.customerPhone)
+    ) {
+      setSelectedTicket(updated);
+    }
+  }, [tickets, selectedTicket]);
+
+  async function handleStatusChange(
+    ticketId: string,
+    newStatus: TicketStatus
+  ) {
+    if (!currentWorkspace || updatingStatus) return;
 
     try {
       setUpdatingStatus(true);
       setError(null);
       setActionSuccess(null);
+
       const token = await getToken();
       if (!token) throw new Error("Authentication required");
 
-      const updated = await updateTicketStatus(
+      await updateTicketStatus(
         token,
         currentWorkspace.id,
         ticketId,
-        newStatus,
+        newStatus
       );
 
       setTickets((prev) =>
-        prev.map((t) => (t.id === ticketId ? { ...t, status: newStatus } : t)),
+        prev.map((ticket) =>
+          ticket.id === ticketId
+            ? { ...ticket, status: newStatus }
+            : ticket
+        )
       );
 
-      if (selectedTicket?.id === ticketId) {
-        setSelectedTicket((prev) => (prev ? { ...prev, status: newStatus } : null));
-      }
+      setSelectedTicket((prev) =>
+        prev?.id === ticketId
+          ? { ...prev, status: newStatus }
+          : prev
+      );
 
-      setActionSuccess(`Ticket status updated to "${newStatus.replace("_", " ")}".`);
+      setActionSuccess(
+        `Ticket status updated to "${newStatus.replace("_", " ")}".`
+      );
+
       setTimeout(() => setActionSuccess(null), 3000);
     } catch (err) {
       console.error("Status update error:", err);
       setError(
-        err instanceof Error ? err.message : "Failed to update ticket status",
+        err instanceof Error
+          ? err.message
+          : "Failed to update ticket status"
       );
     } finally {
       setUpdatingStatus(false);
     }
   }
 
-  // Filtered list
   const filteredTickets = useMemo(() => {
-    return tickets.filter((t) => {
+    return tickets.filter((ticket) => {
       const matchesStatus =
-        statusFilter === "all" ? true : t.status === statusFilter;
+        statusFilter === "all" || ticket.status === statusFilter;
 
       const query = searchQuery.toLowerCase().trim();
+
       if (!query) return matchesStatus;
 
       const matchesSearch =
-        t.subject.toLowerCase().includes(query) ||
-        (t.description && t.description.toLowerCase().includes(query)) ||
-        (t.customerName && t.customerName.toLowerCase().includes(query)) ||
-        (t.customerEmail && t.customerEmail.toLowerCase().includes(query)) ||
-        t.createdBy.toLowerCase().includes(query);
+        ticket.subject.toLowerCase().includes(query) ||
+        (ticket.description || "").toLowerCase().includes(query) ||
+        (ticket.customerName || "").toLowerCase().includes(query) ||
+        (ticket.customerEmail || "").toLowerCase().includes(query) ||
+        ticket.createdBy.toLowerCase().includes(query);
 
       return matchesStatus && matchesSearch;
     });
   }, [tickets, statusFilter, searchQuery]);
 
-  // Metric counts
-  const openCount = tickets.filter((t) => t.status === "open").length;
-  const inProgressCount = tickets.filter((t) => t.status === "in_progress").length;
-  const resolvedCount = tickets.filter((t) => t.status === "resolved").length;
+  const openCount = tickets.filter(
+    (ticket) => ticket.status === "open"
+  ).length;
+
+  const inProgressCount = tickets.filter(
+    (ticket) => ticket.status === "in_progress"
+  ).length;
+
+  const resolvedCount = tickets.filter(
+    (ticket) => ticket.status === "resolved"
+  ).length;
 
   const statItems = [
     {
@@ -187,7 +226,10 @@ export function TicketsInboxView() {
             disabled={loading}
             className="px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.05em] bg-[var(--surface)] border border-[var(--border)] text-[var(--fg)] hover:bg-[var(--hover)] transition-colors rounded-[1px] inline-flex items-center gap-1.5"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
+            <RefreshCw
+              className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""
+                }`}
+            />
             <span>Refresh</span>
           </button>
         }
@@ -208,62 +250,57 @@ export function TicketsInboxView() {
         </div>
       )}
 
-      {/* Metrics Row */}
       <StatRow stats={statItems} />
 
-      {/* Search and Status Filters */}
+      {/* Search and status filters */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--border)] pb-4">
-        {/* Status Filter Tabs */}
         <div className="flex items-center gap-1 text-xs overflow-x-auto">
           {(
             [
               { id: "all", label: "All", count: tickets.length },
               { id: "open", label: "Open", count: openCount },
-              { id: "in_progress", label: "In Progress", count: inProgressCount },
+              {
+                id: "in_progress",
+                label: "In Progress",
+                count: inProgressCount,
+              },
               { id: "resolved", label: "Resolved", count: resolvedCount },
             ] as const
-          ).map((tab) => {
-            const isSelected = statusFilter === tab.id;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setStatusFilter(tab.id)}
-                className={`px-3 py-1.5 font-medium transition-colors rounded-[1px] text-xs uppercase tracking-[0.04em] ${
-                  isSelected
-                    ? "bg-[var(--fg)] text-[var(--btn-text)]"
-                    : "text-[var(--fg-muted)] hover:text-[var(--fg)] hover:bg-[var(--hover)]"
+          ).map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setStatusFilter(tab.id)}
+              className={`px-3 py-1.5 font-medium transition-colors rounded-[1px] text-xs uppercase tracking-[0.04em] ${statusFilter === tab.id
+                  ? "bg-[var(--fg)] text-[var(--btn-text)]"
+                  : "text-[var(--fg-muted)] hover:text-[var(--fg)] hover:bg-[var(--hover)]"
                 }`}
-              >
-                <span>{tab.label}</span>
-                <span className="ml-1.5 font-mono text-[10px] tabular-nums opacity-80">
-                  ({tab.count})
-                </span>
-              </button>
-            );
-          })}
+            >
+              <span>{tab.label}</span>
+              <span className="ml-1.5 font-mono text-[10px] tabular-nums opacity-80">
+                ({tab.count})
+              </span>
+            </button>
+          ))}
         </div>
 
-        {/* Search Input */}
         <div className="relative w-full md:w-72">
           <Search className="w-3.5 h-3.5 text-[var(--fg-muted)] absolute left-3 top-2.5" />
           <input
             type="text"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(event) => setSearchQuery(event.target.value)}
             placeholder="Search email, name, subject..."
             className="w-full pl-9 pr-3 py-1.5 text-xs bg-[var(--surface)] border border-[var(--border)] text-[var(--fg)] placeholder-[var(--fg-faint)] focus:outline-none focus:ring-1 focus:ring-[#E30613] rounded-[1px]"
           />
         </div>
       </div>
 
-      {/* Main Content Area: Table + Side Drawer */}
+      {/* Ticket table and details panel */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Ticket List Table */}
         <div
-          className={`${
-            selectedTicket ? "lg:col-span-7" : "lg:col-span-12"
-          } transition-all`}
+          className={`${selectedTicket ? "lg:col-span-7" : "lg:col-span-12"
+            } transition-all`}
         >
           {loading && tickets.length === 0 ? (
             <TableSkeleton rows={5} />
@@ -298,50 +335,45 @@ export function TicketsInboxView() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[var(--border)]">
-                  {filteredTickets.map((ticket) => {
-                    const isSelected = selectedTicket?.id === ticket.id;
-                    return (
-                      <tr
-                        key={ticket.id}
-                        onClick={() => setSelectedTicket(ticket)}
-                        className={`cursor-pointer transition-colors ${
-                          isSelected
-                            ? "bg-[var(--bg-subtle)] font-medium"
-                            : "hover:bg-[var(--hover)]"
+                  {filteredTickets.map((ticket) => (
+                    <tr
+                      key={ticket.id}
+                      onClick={() => setSelectedTicket(ticket)}
+                      className={`cursor-pointer transition-colors ${selectedTicket?.id === ticket.id
+                          ? "bg-[var(--bg-subtle)] font-medium"
+                          : "hover:bg-[var(--hover)]"
                         }`}
-                      >
-                        <td className="py-3 px-4 text-[var(--fg)]">
-                          <p className="font-semibold text-xs truncate max-w-[220px]">
-                            {ticket.subject}
-                          </p>
-                          <p className="text-[11px] text-[var(--fg-muted)] truncate max-w-[220px] font-normal">
-                            {ticket.description}
-                          </p>
-                        </td>
-                        <td className="py-3 px-4 text-[var(--fg-muted)]">
-                          <p className="text-xs text-[var(--fg)] font-medium truncate max-w-[160px]">
-                            {ticket.customerName || "Visitor"}
-                          </p>
-                          <p className="text-[11px] text-[var(--fg-muted)] truncate max-w-[160px] font-mono">
-                            {ticket.customerEmail || ticket.createdBy}
-                          </p>
-                        </td>
-                        <td className="py-3 px-4 whitespace-nowrap">
-                          <StatusBadge status={ticket.status} />
-                        </td>
-                        <td className="py-3 px-4 text-right text-[var(--fg-muted)] font-mono text-[11px] tabular-nums whitespace-nowrap">
-                          {new Date(ticket.createdAt).toLocaleDateString()}
-                        </td>
-                      </tr>
-                    );
-                  })}
+                    >
+                      <td className="py-3 px-4 text-[var(--fg)]">
+                        <p className="font-semibold text-xs truncate max-w-[220px]">
+                          {ticket.subject}
+                        </p>
+                        <p className="text-[11px] text-[var(--fg-muted)] truncate max-w-[220px] font-normal">
+                          {ticket.description}
+                        </p>
+                      </td>
+                      <td className="py-3 px-4 text-[var(--fg-muted)]">
+                        <p className="text-xs text-[var(--fg)] font-medium truncate max-w-[160px]">
+                          {ticket.customerName || "Visitor"}
+                        </p>
+                        <p className="text-[11px] text-[var(--fg-muted)] truncate max-w-[160px] font-mono">
+                          {ticket.customerEmail || ticket.createdBy}
+                        </p>
+                      </td>
+                      <td className="py-3 px-4 whitespace-nowrap">
+                        <StatusBadge status={ticket.status} />
+                      </td>
+                      <td className="py-3 px-4 text-right text-[var(--fg-muted)] font-mono text-[11px] tabular-nums whitespace-nowrap">
+                        {new Date(ticket.createdAt).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
           )}
         </div>
 
-        {/* Selected Ticket Detail Panel */}
         {selectedTicket && (
           <div className="lg:col-span-5 bg-[var(--surface)] border border-[var(--border)] p-6 sticky top-6 space-y-6">
             <div className="flex items-start justify-between border-b border-[var(--border)] pb-4">
@@ -363,7 +395,6 @@ export function TicketsInboxView() {
               </button>
             </div>
 
-            {/* Status Transition Control */}
             <div>
               <p className="text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--fg-muted)] mb-2">
                 Update Status
@@ -375,30 +406,29 @@ export function TicketsInboxView() {
                     { id: "in_progress", label: "In Progress" },
                     { id: "resolved", label: "Resolved" },
                   ] as const
-                ).map((opt) => {
-                  const isCurrent = selectedTicket.status === opt.id;
+                ).map((option) => {
+                  const isCurrent = selectedTicket.status === option.id;
+
                   return (
                     <button
-                      key={opt.id}
+                      key={option.id}
                       type="button"
                       disabled={updatingStatus || isCurrent}
                       onClick={() =>
-                        handleStatusChange(selectedTicket.id, opt.id)
+                        handleStatusChange(selectedTicket.id, option.id)
                       }
-                      className={`py-1.5 px-2 text-xs font-medium uppercase tracking-[0.04em] rounded-[1px] border transition-colors ${
-                        isCurrent
+                      className={`py-1.5 px-2 text-xs font-medium uppercase tracking-[0.04em] rounded-[1px] border transition-colors ${isCurrent
                           ? "bg-[var(--fg)] text-[var(--btn-text)] border-[var(--fg)]"
                           : "bg-[var(--surface)] text-[var(--fg-muted)] border-[var(--border)] hover:border-[var(--fg)] hover:text-[var(--fg)]"
-                      }`}
+                        }`}
                     >
-                      {opt.label}
+                      {option.label}
                     </button>
                   );
                 })}
               </div>
             </div>
 
-            {/* Customer Details */}
             <div className="p-4 bg-[var(--bg-subtle)] border border-[var(--border)] space-y-2.5 text-xs">
               <p className="text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--fg-muted)] mb-1">
                 Customer Information
@@ -425,7 +455,6 @@ export function TicketsInboxView() {
               )}
             </div>
 
-            {/* Description */}
             <div>
               <p className="text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--fg-muted)] mb-1.5">
                 Description / Question
@@ -435,11 +464,12 @@ export function TicketsInboxView() {
               </div>
             </div>
 
-            {/* System Metadata */}
             <div className="pt-2 border-t border-[var(--border)] space-y-1.5 text-[11px] text-[var(--fg-muted)] font-mono">
               <div className="flex justify-between">
                 <span>Ticket ID:</span>
-                <span className="select-all">{selectedTicket.id.slice(0, 18)}...</span>
+                <span className="select-all">
+                  {selectedTicket.id.slice(0, 18)}...
+                </span>
               </div>
               {selectedTicket.conversationId && (
                 <div className="flex justify-between">
@@ -451,7 +481,9 @@ export function TicketsInboxView() {
               )}
               <div className="flex justify-between">
                 <span>Created:</span>
-                <span>{new Date(selectedTicket.createdAt).toLocaleString()}</span>
+                <span>
+                  {new Date(selectedTicket.createdAt).toLocaleString()}
+                </span>
               </div>
             </div>
           </div>
@@ -460,6 +492,3 @@ export function TicketsInboxView() {
     </div>
   );
 }
-
-
-

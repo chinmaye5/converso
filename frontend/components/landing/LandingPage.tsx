@@ -208,6 +208,7 @@ export function LandingPage() {
             silk={0.5}        // more glossy folds
             grainAmount={0.1}
             dpr={1.5}
+            bands={3}
           />
           {/* Fade the bottom into the page background */}
           <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-b from-transparent to-[#0A0A0A]" />
