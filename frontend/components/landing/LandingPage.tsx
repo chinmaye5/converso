@@ -254,73 +254,92 @@ export function LandingPage() {
         </div>
 
         {/* Dashboard mockup */}
-        <div className="relative max-w-5xl mx-auto mt-20">
+        <div className="relative max-w-6xl mx-auto mt-20 px-4 sm:px-6">
           <div className="border border-white/10 rounded-[2px] overflow-hidden bg-[#111] shadow-2xl">
             {/* Fake toolbar */}
             <div className="flex items-center gap-1.5 px-4 py-2.5 border-b border-white/10 bg-[#0D0D0D]">
               <span className="w-2.5 h-2.5 rounded-full bg-[#E30613]/60" />
               <span className="w-2.5 h-2.5 rounded-full bg-white/10" />
               <span className="w-2.5 h-2.5 rounded-full bg-white/10" />
-              <span className="ml-4 text-[10px] font-mono text-white/25">converso — dashboard</span>
+              <span className="ml-4 text-[10px] font-mono text-white/25 hidden sm:block">converso — dashboard</span>
             </div>
 
             {/* Fake dashboard */}
-            <div className="flex">
-              {/* Sidebar */}
-              <div className="w-44 border-r border-white/5 p-3 space-y-1 shrink-0">
-                {["Overview", "Chatbot", "Knowledge", "Tickets", "Playground"].map((item, i) => (
-                  <div
-                    key={item}
-                    className={`flex items-center gap-2 px-2.5 py-1.5 rounded-[1px] text-[10px] ${i === 0
-                      ? "bg-white/5 text-white font-medium"
-                      : "text-white/30"
-                      }`}
-                  >
-                    <span className="w-1 h-1 rounded-full bg-current shrink-0" />
-                    {item}
-                  </div>
-                ))}
+            <div className="flex flex-col lg:flex-row">
+              {/* Sidebar - horizontal on mobile, vertical on desktop */}
+              <div className="lg:w-44 border-b lg:border-b-0 lg:border-r border-white/5 p-3 lg:p-3">
+                <div className="flex lg:flex-col items-center lg:items-start gap-1 overflow-x-auto lg:overflow-visible scrollbar-hide">
+                  {["Overview", "Chatbot", "Knowledge", "Tickets", "Playground"].map((item, i) => (
+                    <div
+                      key={item}
+                      className={`flex items-center gap-2 px-2.5 py-1.5 rounded-[1px] text-[10px] whitespace-nowrap lg:whitespace-normal ${i === 0
+                        ? "bg-white/5 text-white font-medium"
+                        : "text-white/30"
+                        }`}
+                    >
+                      <span className="w-1 h-1 rounded-full bg-current shrink-0" />
+                      {item}
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {/* Main content */}
-              <div className="flex-1 p-6 space-y-4">
-                {/* Stats row */}
-                <div className="grid grid-cols-4 gap-3">
+              <div className="flex-1 p-4 sm:p-6 space-y-4">
+                {/* Stats row - responsive grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
                   {[
-                    { l: "Chatbot Status", v: "ACTIVE" },
-                    { l: "Open Tickets", v: "3" },
-                    { l: "Total Tickets", v: "47" },
-                    { l: "Knowledge", v: "CONNECTED" },
+                    { l: "Chatbot Status", v: "ACTIVE", color: "#16A34A" },
+                    { l: "Open Tickets", v: "3", color: "#E30613" },
+                    { l: "Total Tickets", v: "47", color: "#2563eb" },
+                    { l: "Knowledge", v: "CONNECTED", color: "#16A34A" },
                   ].map((s) => (
-                    <div key={s.l} className="border border-white/5 p-3 rounded-[1px]">
+                    <div key={s.l} className="border border-white/5 p-2.5 sm:p-3 rounded-[1px] bg-white/[0.02]">
                       <p className="text-[9px] text-white/30 uppercase tracking-wider mb-1">{s.l}</p>
-                      <p className="text-sm font-bold text-white">{s.v}</p>
+                      <p className="text-sm sm:text-base font-bold text-white" style={{ color: s.color === "#E30613" ? s.color : undefined }}>
+                        {s.v}
+                      </p>
                     </div>
                   ))}
                 </div>
 
-                {/* Quick action cards */}
-                <div className="grid grid-cols-2 gap-3">
+                {/* Quick action cards - stacked on mobile, side by side on larger screens */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                   {[
-                    { t: "Configure Chatbot", s: "Set prompt & branding" },
-                    { t: "Upload Documents", s: "PDF knowledge base" },
-                  ].map((c) => (
-                    <div key={c.t} className="border border-white/5 p-4 rounded-[1px]">
-                      <p className="text-xs font-semibold text-white mb-1">{c.t}</p>
-                      <p className="text-[10px] text-white/30">{c.s}</p>
-                    </div>
-                  ))}
+                    { t: "Configure Chatbot", s: "Set prompt & branding", icon: Bot },
+                    { t: "Upload Documents", s: "PDF knowledge base", icon: FileText },
+                  ].map((c) => {
+                    const Icon = c.icon;
+                    return (
+                      <div key={c.t} className="border border-white/5 p-3 sm:p-4 rounded-[1px] bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+                        <div className="flex items-start gap-3">
+                          <div className="w-8 h-8 border border-white/10 rounded-[1px] flex items-center justify-center shrink-0">
+                            <Icon className="w-4 h-4 text-white/50" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-semibold text-white mb-0.5">{c.t}</p>
+                            <p className="text-[10px] text-white/30">{c.s}</p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
 
                 {/* Ticket row */}
-                <div className="border border-white/5 rounded-[1px] overflow-hidden">
-                  <div className="px-4 py-2 border-b border-white/5 bg-white/3">
+                <div className="border border-white/5 rounded-[1px] overflow-hidden bg-white/[0.02]">
+                  <div className="px-3 sm:px-4 py-2 border-b border-white/5 bg-white/[0.03]">
                     <p className="text-[9px] text-white/30 uppercase tracking-wider">Recent Tickets</p>
                   </div>
-                  {["Refund request for order #4821", "Can't log into account"].map((t) => (
-                    <div key={t} className="flex items-center justify-between px-4 py-2.5 border-b border-white/5 last:border-0">
-                      <p className="text-[10px] text-white/60">{t}</p>
-                      <span className="text-[9px] px-1.5 py-0.5 bg-white/5 text-white/40 rounded-[1px]">open</span>
+                  {[
+                    { t: "Refund request for order #4821", status: "open" },
+                    { t: "Can't log into account", status: "open" },
+                  ].map((ticket) => (
+                    <div key={ticket.t} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-3 sm:px-4 py-2.5 border-b border-white/5 last:border-0">
+                      <p className="text-[10px] text-white/60 truncate">{ticket.t}</p>
+                      <span className="text-[9px] px-1.5 py-0.5 bg-white/5 text-white/40 rounded-[1px] uppercase tracking-wider shrink-0">
+                        {ticket.status}
+                      </span>
                     </div>
                   ))}
                 </div>
