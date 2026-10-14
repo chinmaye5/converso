@@ -223,6 +223,36 @@ export async function searchKnowledge(
   }
 }
 
+export async function deleteDocument(
+  token: string,
+  workspaceId: string,
+  documentId: string,
+): Promise<void> {
+  try {
+    await axios.delete(
+      `${API_BASE}/api/workspaces/${workspaceId}/documents/${documentId}`,
+      { headers: authHeaders(token) },
+    );
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function getDocuments(
+  token: string,
+  workspaceId: string,
+): Promise<DocumentItem[]> {
+  try {
+    const res = await axios.get<{ documents: DocumentItem[] }>(
+      `${API_BASE}/api/workspaces/${workspaceId}/documents`,
+      { headers: authHeaders(token) },
+    );
+    return res.data.documents || [];
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
 /* ============================================================
    SUPPORT TICKETS
    ============================================================ */

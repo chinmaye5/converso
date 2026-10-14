@@ -176,3 +176,124 @@ export async function uploadDocument(req: Request, res: Response) {
         return res.status(500).json({ error: "Could not save document" });
     }
 }
+
+export async function deleteDocument(req: Request, res: Response) {
+    const { isAuthenticated, userId } = getAuth(req);
+
+    if (!isAuthenticated || !userId) {
+        return res.status(401).json({ error: "Please sign in first" });
+    }
+
+    const workspaceId = Array.isArray(req.params.workspaceId)
+        ? req.params.workspaceId[0]
+        : req.params.workspaceId;
+
+    const documentId = Array.isArray(req.params.documentId)
+        ? req.params.documentId[0]
+        : req.params.documentId;
+
+    if (!workspaceId || typeof workspaceId !== "string") {
+        return res.status(400).json({ error: "Workspace ID is required" });
+    }
+
+    if (!documentId || typeof documentId !== "string") {
+        return res.status(400).json({ error: "Document ID is required" });
+    }
+
+    try {
+        // Verify the document belongs to the user's workspace
+        const [document] = await db
+            .select({ storagePath: documents.storagePath })
+            .from(documents)
+            .where(
+                and(
+                    eq(documents.id, documentId),
+                    eq(documents.workspaceId, workspaceId),
+                ),
+            )
+            .limit(1);
+
+        if (!document) {
+            return res.status(404).json({ error: "Document not found" });
+        }
+
+        // Verify workspace ownership
+        const [workspace] = await db
+            .select({ id: workspaces.id })
+            .from(workspaces)
+            .where(
+                and(
+                    eq(workspaces.id, workspaceId),
+                    eq(workspaces.ownerId, userId),
+                ),
+            )
+            .limit(1);
+
+        if (!workspace) {
+            return res.status(403).json({ error: "You do not have permission to delete this document" });
+        }
+
+        // Delete from database (cascade will delete chunks automatically)
+        await db.delete(documents).where(eq(documents.id, documentId));
+
+        // Delete from Supabase storage
+        const { error: storageError } = await supabase.storage
+            .from("knowledge-documents")
+            .remove([document.storagePath]);
+
+        if (storageError) {
+            console.error("Storage deletion failed:", storageError);
+            // Don't fail the request if storage deletion fails - document is already removed from DB
+        }
+
+        return res.status(200).json({ message: "Document deleted successfully" });
+    } catch (error) {
+        console.error("Document deletion failed:", error);
+        return res.status(500).json({ error: "Could not delete document" });
+    }
+}
+
+export async function getDocuments(req: Request, res: Response) {
+    const { isAuthenticated, userId } = getAuth(req);
+
+    if (!isAuthenticated || !userId) {
+        return res.status(401).json({ error: "Please sign in first" });
+    }
+
+    const workspaceId = Array.isArray(req.params.workspaceId)
+        ? req.params.workspaceId[0]
+        : req.params.workspaceId;
+
+    if (!workspaceId || typeof workspaceId !== "string") {
+        return res.status(400).json({ error: "Workspace ID is required" });
+    }
+
+    try {
+        // Verify workspace ownership
+        const [workspace] = await db
+            .select({ id: workspaces.id })
+            .from(workspaces)
+            .where(
+                and(
+                    eq(workspaces.id, workspaceId),
+                    eq(workspaces.ownerId, userId),
+                ),
+            )
+            .limit(1);
+
+        if (!workspace) {
+            return res.status(403).json({ error: "You do not have permission to access this workspace" });
+        }
+
+        const documentsList = await db
+            .select()
+            .from(documents)
+            .where(eq(documents.workspaceId, workspaceId))
+            .orderBy(documents.createdAt);
+
+        return res.status(200).json({ documents: documentsList });
+    } catch (error) {
+        console.error("Failed to fetch documents:", error);
+        return res.status(500).json({ error: "Could not fetch documents" });
+    }
+}

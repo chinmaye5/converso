@@ -1,9 +1,9 @@
 ﻿"use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { useWorkspace } from "../../lib/workspace-context";
-import { uploadDocument, searchKnowledge } from "../../lib/api";
+import { uploadDocument, searchKnowledge, deleteDocument, getDocuments } from "../../lib/api";
 import type { DocumentItem, SearchResultChunk } from "../../lib/types";
 import { PageHeader } from "../ui/PageHeader";
 import { StatusBadge } from "../ui/StatusBadge";
@@ -17,6 +17,7 @@ import {
   AlertCircle,
   Clock,
   Sparkles,
+  Trash2,
 } from "lucide-react";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
@@ -43,6 +44,8 @@ export function KnowledgeBaseView() {
 
   // Session document history
   const [sessionDocuments, setSessionDocuments] = useState<DocumentItem[]>([]);
+  const [deletingDocId, setDeletingDocId] = useState<string | null>(null);
+  const [loadingDocuments, setLoadingDocuments] = useState(false);
 
   // Vector Search Tester state
   const [searchQuery, setSearchQuery] = useState("");
@@ -68,6 +71,28 @@ export function KnowledgeBaseView() {
 
     setSelectedFile(file);
   }, []);
+
+  // Load documents when workspace changes
+  useEffect(() => {
+    async function loadDocuments() {
+      if (!currentWorkspace) return;
+
+      try {
+        setLoadingDocuments(true);
+        const token = await getToken();
+        if (!token) return;
+
+        const docs = await getDocuments(token, currentWorkspace.id);
+        setSessionDocuments(docs);
+      } catch (err) {
+        console.error("Failed to load documents:", err);
+      } finally {
+        setLoadingDocuments(false);
+      }
+    }
+
+    loadDocuments();
+  }, [currentWorkspace, getToken]);
 
   async function handleUpload(e: React.FormEvent) {
     e.preventDefault();
@@ -98,7 +123,9 @@ export function KnowledgeBaseView() {
           result.chunksCreated || "chunks"
         } indexed).`,
       );
-      setSessionDocuments((prev) => [result.document, ...prev]);
+      // Reload documents to get the full list
+      const docs = await getDocuments(token, currentWorkspace.id);
+      setSessionDocuments(docs);
       setSelectedFile(null);
       setUploadProgress(0);
     } catch (err) {
@@ -136,6 +163,34 @@ export function KnowledgeBaseView() {
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
     runSearch();
+  }
+
+  async function handleDeleteDocument(documentId: string) {
+    if (!currentWorkspace) return;
+
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this document? This will also delete all associated chunks and cannot be undone.",
+    );
+
+    if (!confirmed) return;
+
+    try {
+      setDeletingDocId(documentId);
+      const token = await getToken();
+      if (!token) throw new Error("Authentication required");
+
+      await deleteDocument(token, currentWorkspace.id, documentId);
+
+      setSessionDocuments((prev) => prev.filter((doc) => doc.id !== documentId));
+      setUploadSuccess("Document deleted successfully");
+    } catch (err) {
+      console.error("Delete error:", err);
+      setUploadError(
+        err instanceof Error ? err.message : "Failed to delete document",
+      );
+    } finally {
+      setDeletingDocId(null);
+    }
   }
 
   if (!currentWorkspace) {
@@ -296,10 +351,16 @@ export function KnowledgeBaseView() {
           </span>
         </div>
 
-        {sessionDocuments.length === 0 ? (
+        {loadingDocuments ? (
+          <div className="border border-dashed border-[var(--border)] p-6 text-left">
+            <p className="text-xs font-medium text-[var(--fg-muted)]">
+              Loading documents...
+            </p>
+          </div>
+        ) : sessionDocuments.length === 0 ? (
           <div className="border border-dashed border-[var(--border)] p-6 text-left">
             <p className="text-xs font-medium text-[var(--fg)] mb-1">
-              No documents uploaded in this session
+              No documents uploaded
             </p>
             <p className="text-xs text-[var(--fg-muted)] leading-relaxed">
               Upload PDF files above to split text into passage chunks and generate 1024-dimension vector embeddings.
@@ -322,6 +383,9 @@ export function KnowledgeBaseView() {
                   <th className="py-2.5 px-4 font-medium uppercase tracking-[0.06em] text-[10px] text-right">
                     Ingested
                   </th>
+                  <th className="py-2.5 px-4 font-medium uppercase tracking-[0.06em] text-[10px] text-right">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[var(--border)]">
@@ -339,6 +403,16 @@ export function KnowledgeBaseView() {
                     </td>
                     <td className="py-3 px-4 text-right text-[var(--fg-muted)] font-mono text-[11px] tabular-nums">
                       {new Date(doc.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="py-3 px-4 text-right">
+                      <button
+                        onClick={() => handleDeleteDocument(doc.id)}
+                        disabled={deletingDocId === doc.id}
+                        className="p-1.5 text-[var(--fg-muted)] hover:text-[#E30613] hover:bg-[#E30613]/5 transition-colors rounded-[1px] disabled:opacity-50 disabled:cursor-not-allowed"
+                        title="Delete document"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
                     </td>
                   </tr>
                 ))}
